@@ -208,6 +208,12 @@ include '../includes/header.php';
     // Ensure files are included when the form is submitted
     const form = document.querySelector('form');
     form.addEventListener('submit', function(event) {
+
+        // Prevent default form submission
+        event.preventDefault();
+
+
+
         if (insuranceFiles.length > 0) {
             const formData = new FormData();
 
@@ -230,17 +236,17 @@ include '../includes/header.php';
             })
             .then(response => response.text())
             .then(data => {
-                console.log(data);
-                // alert('Form submitted successfully!');
+                // console.log(data);
+                // alert('Submission Finished');
+                window.location.href = "../pages/ThankYou.php?form_id=" + data.form_id;
             })
             .catch(error => {
                 console.error(error);
                 // alert('An error occurred.');
             });
 
-            // Prevent default form submission
-            event.preventDefault();
-        } else {
+        } 
+        else {
             alert('Please add at least one insurance file.');
         }
     });

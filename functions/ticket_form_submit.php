@@ -9,8 +9,7 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-echo "Connected successfully!";
-
+// echo "Connected successfully!<br>";
 
 // Check if form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -42,17 +41,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $license_plate, $is_owner, $registered_in_ny, $have_insurance, $have_title, $have_owner_license);
 
 
-    if (isset($_FILES['insurance_files'])) {
-        foreach ($_FILES['insurance_files']['error'] as $error) {
-            if ($error != UPLOAD_ERR_OK) {
-                echo "Error during file upload: $error";
-            }
-        }
-    }
+    // if (isset($_FILES['insurance_files'])) {
+    //     foreach ($_FILES['insurance_files']['error'] as $error) {
+    //         if ($error != UPLOAD_ERR_OK) {
+    //             echo "Error during file upload: $error";
+    //         }
+    //     }
+    // }
 
-    echo 'FILES: <pre>';
-    print_r($_FILES);
-    echo '</pre>';
+    // echo 'FILES: <pre>';
+    // print_r($_FILES);
+    // echo '</pre>';
 
     // Execute the query
     if ($stmt->execute()) {
@@ -60,11 +59,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         //Then we upload insurance files into the insurance files table
 
         $form_id = $stmt->insert_id;  // Get the inserted form_id for the ticket
-        echo "Form submitted successfully! Form ID: " . $form_id . "<br>";
+        // echo "Form submitted successfully! Form ID: " . $form_id . "<br>";
 
         // Handle file upload if insurance files are provided
         if (isset($_FILES['insurance_files']) && !empty($_FILES['insurance_files']['name'][0])) {
-            echo "Uploading insurance files<br>";
+            // echo "Uploading insurance files<br>";
             $files = $_FILES['insurance_files'];
 
             for ($i = 0; $i < count($files['name']); $i++) {
@@ -97,19 +96,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $stmt2->close();
             }
         }else {
-            echo "No insurance files uploaded.";
+            // echo "No insurance files uploaded.";
         }
     } else {
         echo "Error: " . $stmt->error;
     }
 
-    // Close the statement and connection
     $stmt->close();
+
+
 } else {
     echo "Invalid request.";
 }
 
 $conn->close();
+
+// header("Location: https://example.com");
+// exit();
+// header("Location: ../pages/ThankYou.php?form_id=" . $form_id);
+// exit(); // Ensure no further code runs after the redirect
+
+
+
+// Redirect to a new page
+// header("Location: ../pages/TicketForm.php");//?form_id=" . $form_id); // Redirect to a success page with the form_id as a query parameter
+// exit(); // Ensure no further code runs after the redirect
 
 
 ?>
