@@ -150,9 +150,11 @@ include '../includes/header.php';
                 </div>
             </div>
 
-
+            <div id="loading-indicator" style="display: none;">
+                <p>Submitting your form... <span class="spinner">🔄</span></p>
+            </div>
             <div class="form-group full-width">
-                <button type="submit">Submit</button>
+                <button type="submit" id="submit-btn">Submit</button>
             </div>
         </form>
     </div>
@@ -202,57 +204,8 @@ include '../includes/header.php';
             listItem.appendChild(deleteButton);
             insuranceFileList.appendChild(listItem);
         });
-        insuranceFileInput.value ='';
+        // insuranceFileInput.value ='';
     });
-
-    // Ensure files are included when the form is submitted
-    const form = document.querySelector('form');
-    form.addEventListener('submit', function(event) {
-
-        // Prevent default form submission
-        event.preventDefault();
-
-
-
-        if (insuranceFiles.length > 0) {
-            const formData = new FormData();
-
-            // Add other form fields to the formData
-            const formElements = form.querySelectorAll('input, select, textarea');
-            formElements.forEach((input) => {
-                if (input.type === 'file') return; // Skip file inputs, we are handling them separately
-                formData.append(input.name, input.value);
-            });
-
-            // Add insurance files to FormData
-            insuranceFiles.forEach(file => {
-                formData.append('insurance_files[]', file); // Use 'insurance_files[]' to allow multiple file upload
-            });
-
-            // Create an XMLHttpRequest or use fetch to send form data to the server
-            fetch(form.action, {
-                method: 'POST',
-                body: formData,
-            })
-            .then(response => response.text())
-            .then(data => {
-                // console.log(data);
-                // alert('Submission Finished');
-                window.location.href = "../pages/ThankYou.php?form_id=" + data.form_id;
-            })
-            .catch(error => {
-                console.error(error);
-                // alert('An error occurred.');
-            });
-
-        } 
-        else {
-            alert('Please add at least one insurance file.');
-        }
-    });
-
-
-
 
 
     const titleYes = document.getElementById('title-yes');
@@ -260,6 +213,8 @@ include '../includes/header.php';
     const titleFileUploadSection = document.getElementById('title-file-upload-section');
     const titleFileInput = document.getElementById('title-files');
     const titleFileList = document.getElementById('title-file-list');
+    let titleFiles = [];
+
     // Add event listeners to radio buttons
     titleYes.addEventListener('change', function () {
         if (titleYes.checked) {
@@ -276,6 +231,8 @@ include '../includes/header.php';
     titleFileInput.addEventListener('change', function () {
         const files = titleFileInput.files;
         const fileArray = Array.from(files); 
+
+        titleFiles.push(files[0]);
 
         fileArray.forEach(file => {
             
@@ -304,6 +261,8 @@ include '../includes/header.php';
     const licenseFileUploadSection = document.getElementById('license-file-upload-section');
     const licenseFileInput = document.getElementById('license-files');
     const licenseFileList = document.getElementById('license-file-list');
+    let licenseFiles = [];
+
     // Add event listeners to radio buttons
     licenseYes.addEventListener('change', function () {
         if (licenseYes.checked) {
@@ -320,6 +279,8 @@ include '../includes/header.php';
     licenseFileInput.addEventListener('change', function () {
         const files = licenseFileInput.files;
         const fileArray = Array.from(files); 
+
+        licenseFiles.push(files[0]);
 
         fileArray.forEach(file => {
             
@@ -338,6 +299,98 @@ include '../includes/header.php';
             listItem.appendChild(deleteButton);
             licenseFileList.appendChild(listItem);
         });
+
+    });
+
+
+
+
+
+    // We are creating our own type of submission
+    const form = document.querySelector('form');
+    const submitButton = document.getElementById('submit-btn');  // Get the button using its ID
+    const loadingIndicator = document.getElementById('loading-indicator');  // Get the button using its ID
+
+    form.addEventListener('submit', function(event) {
+        // alert('In progress');
+        submitButton.disabled = true;
+        submitButton.style.display = 'none';
+        loadingIndicator.style.display = 'block';
+
+
+        // Prevent default form submission
+        //event.preventDefault(); // TODO
+
+
+        const formData = new FormData();//Has all form data
+
+        // Add other form fields to the formData
+        const formElements = form.querySelectorAll('input, select, textarea');
+        formElements.forEach((input) => {
+            if (input.type === 'file') return; // Skip file inputs, we are handling them separately
+            if (input.type === 'radio' && input.checked){
+                formData.append(input.name, input.value);
+                console.log(input.name, input.value);
+            }
+            if (input.type != 'radio'){
+                formData.append(input.name, input.value);
+                console.log(input.name, input.value);
+            }
+            
+        });
+
+        if (insuranceFiles.length > 0) {
+            // Add insurance files to FormData
+            insuranceFiles.forEach(file => {
+                formData.append('insurance_files[]', file);
+            });
+        } 
+
+        if (titleFiles.length > 0) {
+            // Add title files to FormData
+            titleFiles.forEach(file => {
+                formData.append('title_files[]', file); 
+            });
+        } 
+
+        if (licenseFiles.length > 0) {
+            // Add license files to FormData
+            licenseFiles.forEach(file => {
+                formData.append('license_files[]', file); 
+            });
+        } 
+
+
+        // Create an XMLHttpRequest or use fetch to send form data to the server
+        fetch(form.action, {
+                method: 'POST',
+                body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            // console.log("data response: ",data);
+            /*
+            data: {
+                "status": "success",
+                "ticket": 12345
+            } 
+            */
+            if (data.status === "success") {
+                // window.location.href = "../pages/ThankYou.php?ticket=" + data.ticket; // TODO
+            }else {
+                throw new Error('Form LOL failed');
+            }
+        })
+        .catch(error => {
+            console.error(error);
+            alert('An error occurred.');
+        })
+        .finally(() =>  {
+            submitButton.disabled = false;
+            loadingIndicator.style.display = 'none';
+            submitButton.style.display = 'flex';
+        });
+
 
     });
 

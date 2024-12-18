@@ -1,10 +1,26 @@
 <?php
 // Include shared components
 include '../includes/header.php';
+
+
+if (isset($_GET['ticket'])) {
+    $ticket = $_GET['ticket'];
+} 
+
+
 ?>
+
+
 
 <div class='main-container'>
 
-<h1>Thank you for everything</h1>
+    <div class='form-container '>
+        <h1>Your response has been filed!</h1>
+
+        <h2>Your ticket number is: <?php echo htmlspecialchars($ticket); ?></h2>
+
+        <p>You will get an email response soon. Please Wait.</p>
+
+    </div>
 
 </div>
