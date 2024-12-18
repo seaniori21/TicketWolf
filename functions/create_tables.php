@@ -53,9 +53,22 @@ CREATE TABLE IF NOT EXISTS tickets (
 ";
 // Execute the table creation query
 if ($conn->query($sql_create_tickets_table) === TRUE) {
-    echo "Table 'tickets' created successfully!<br>";
+    echo "Table 'tickets' created successfully or already existed!<br>";
 } else {
     echo "Error creating table: " . $conn->error;
+}
+
+
+$sql_add_ticket_column = "
+ALTER TABLE tickets
+ADD TicketToday INT DEFAULT NULL;
+";
+
+// Execute the ALTER TABLE query
+if ($conn->query($sql_add_ticket_column) === TRUE) {
+    echo "Column 'TicketToday' added successfully!<br>";
+} else {
+    echo "Error adding column: " . $conn->error;
 }
 
 
@@ -71,9 +84,45 @@ CREATE TABLE IF NOT EXISTS insurance_files (
 ";
 // Execute the table creation query
 if ($conn->query($sql_create_insurance_files_table) === TRUE) {
-    echo "Table 'insurance_files' created successfully!";
+    echo "Table 'insurance_files' created successfully or already existed!<br>";
 } else {
     echo "Error creating insurance_files table: " . $conn->error;
+}
+
+$sql_create_title_files_table = "
+CREATE TABLE IF NOT EXISTS title_files (
+    file_name VARCHAR(255) NOT NULL,
+    file_type VARCHAR(255) NOT NULL,
+    file_data LONGBLOB NOT NULL, -- Store binary file data
+    form_id INT NOT NULL,
+    uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (form_id) REFERENCES tickets(form_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+";
+// Execute the table creation query
+if ($conn->query($sql_create_title_files_table) === TRUE) {
+    echo "Table 'title_files' created successfully or already existed!<br>";
+} else {
+    echo "Error creating title_files table: " . $conn->error;
+}
+
+
+
+$sql_create_license_files_table = "
+CREATE TABLE IF NOT EXISTS license_files (
+    file_name VARCHAR(255) NOT NULL,
+    file_type VARCHAR(255) NOT NULL,
+    file_data LONGBLOB NOT NULL, -- Store binary file data
+    form_id INT NOT NULL,
+    uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (form_id) REFERENCES tickets(form_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+";
+// Execute the table creation query
+if ($conn->query($sql_create_license_files_table) === TRUE) {
+    echo "Table 'license_files' created successfully or already existed!<br>";
+} else {
+    echo "Error creating license_files table: " . $conn->error;
 }
 
 
