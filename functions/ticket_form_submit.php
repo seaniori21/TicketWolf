@@ -9,7 +9,7 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-echo "Connected successfully!<br>";
+// echo "Connected successfully!<br>";
 
 // Include the send-email.php file
 require 'send_email.php';  // Make sure the path is correct
@@ -63,18 +63,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $license_plate, $is_owner, $registered_in_ny, $have_insurance, $have_title, $have_owner_license, $ticket_today);
 
     
-    $insuranceFiles = $_FILES['insurance_files'];
+    $insuranceFiles = [];
+    $licenseFiles = [];
+    $titleFiles = [];
 
 
-    // Call the sendEmail function after the form is processed, email_result is a boolean of success
-    $email_result = sendEmail($first_name, $last_name, $email, $phone, $vin, $drivers_license,
-     $license_plate, $is_owner, $registered_in_ny, $have_insurance, $have_title, $have_owner_license, $ticket_today, $insuranceFiles);
 
-    if ($email_result === true) {
-        echo "Email sent successfully";
-    } else {
-        echo $email_result; // Output error message if email fails
-    }
 
     if ($stmt->execute()) {
 
@@ -92,7 +86,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $file_type = $files['type'][$i];
                 $file_tmp = $files['tmp_name'][$i];
                 $file_data = file_get_contents($file_tmp);
+                
 
+                if ($files['error'][$i] === UPLOAD_ERR_OK) {
+                    $insuranceFiles[] = [
+                        'tmp_name' => $files['tmp_name'][$i], // Temporary file path
+                        'name' => $files['name'][$i],         // Original file name
+                        'type' => $files['type'][$i],         // File MIME type
+                        'data' => file_get_contents($files['tmp_name'][$i]) // File content (optional, if needed)
+                    ];
+                } 
+
+                // echo "Insurance Files: ";
+                // print_r($insuranceFiles);
+                
 
  
                 $stmt2 = $conn->prepare("INSERT INTO insurance_files 
@@ -117,7 +124,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
 
-
         // Handle file upload if title files are provided
         if (isset($_FILES['title_files']) && !empty($_FILES['title_files']['name'][0])) {
             // echo "Uploading title files<br>";
@@ -127,9 +133,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $file_name = $files['name'][$i];
                 $file_type = $files['type'][$i];
                 $file_tmp = $files['tmp_name'][$i];
-
-                // Read the file's binary content
                 $file_data = file_get_contents($file_tmp);
+
+
+                if ($files['error'][$i] === UPLOAD_ERR_OK) {
+                    $titleFiles[] = [
+                        'tmp_name' => $files['tmp_name'][$i], // Temporary file path
+                        'name' => $files['name'][$i],         // Original file name
+                        'type' => $files['type'][$i],         // File MIME type
+                        'data' => file_get_contents($files['tmp_name'][$i]) // File content (optional, if needed)
+                    ];
+                } 
 
                 // Prepare SQL statement for title table
                 $stmt2 = $conn->prepare("INSERT INTO title_files 
@@ -162,9 +176,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $file_name = $files['name'][$i];
                 $file_type = $files['type'][$i];
                 $file_tmp = $files['tmp_name'][$i];
-
-                // Read the file's binary content
                 $file_data = file_get_contents($file_tmp);
+
+
+
+                if ($files['error'][$i] === UPLOAD_ERR_OK) {
+                    $licenseFiles[] = [
+                        'tmp_name' => $files['tmp_name'][$i], // Temporary file path
+                        'name' => $files['name'][$i],         // Original file name
+                        'type' => $files['type'][$i],         // File MIME type
+                        'data' => file_get_contents($files['tmp_name'][$i]) // File content (optional, if needed)
+                    ];
+                } 
 
                 // Prepare SQL statement for license table
                 $stmt2 = $conn->prepare("INSERT INTO license_files 
@@ -187,6 +210,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $stmt2->close();
             }
         }
+
+
+        // Call the sendEmail function after the form is processed, email_result is a boolean of success
+        $email_result = sendEmail($first_name, $last_name, $email, $phone, $vin, $drivers_license,
+        $license_plate, $is_owner, $registered_in_ny, $have_insurance, $have_title, $have_owner_license, $ticket_today, 
+        $insuranceFiles, $titleFiles, $licenseFiles);
+
+        if ($email_result === true) {
+            // echo "Email sent successfully";
+        } else {
+            echo $email_result; // Output error message if email fails
+        }
+
 
         echo json_encode(['status' => 'success', 'ticket' => $ticket_today]);
 

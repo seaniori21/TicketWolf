@@ -319,7 +319,7 @@ include '../includes/header.php';
 
 
         // Prevent default form submission
-        //event.preventDefault(); // TODO
+        event.preventDefault(); // TODO
 
 
         const formData = new FormData();//Has all form data
@@ -376,7 +376,7 @@ include '../includes/header.php';
             } 
             */
             if (data.status === "success") {
-                // window.location.href = "../pages/ThankYou.php?ticket=" + data.ticket; // TODO
+               window.location.href = "../pages/ThankYou.php?ticket=" + data.ticket; // TODO
             }else {
                 throw new Error('Form LOL failed');
             }
