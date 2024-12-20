@@ -19,7 +19,7 @@ if (isset($_GET['ticket'])) {
 
         <h2>Your ticket number is: <?php echo htmlspecialchars($ticket); ?></h2>
 
-        <p>You will get an email response soon. Please Wait.</p>
+        <p>You will get an email copy of this message.<br> A representative will help you shortly.</p>
 
     </div>
 

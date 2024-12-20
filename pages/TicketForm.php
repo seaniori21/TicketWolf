@@ -199,6 +199,12 @@ include '../includes/header.php';
             deleteButton.classList.add('delete-file');
             deleteButton.addEventListener('click', function () {
                 listItem.remove();
+                
+                const index = insuranceFiles.indexOf(file);
+                if (index > -1) {
+                    insuranceFiles.splice(index, 1); // Remove the file from the array
+                }
+
             });
 
             listItem.appendChild(deleteButton);
@@ -245,6 +251,11 @@ include '../includes/header.php';
             deleteButton.classList.add('delete-file');
             deleteButton.addEventListener('click', function () {
                 listItem.remove(); // Remove the file from the list
+
+                const index = titleFiles.indexOf(file);
+                if (index > -1) {
+                    titleFiles.splice(index, 1); // Remove the file from the array
+                }
             });
 
             
@@ -293,6 +304,11 @@ include '../includes/header.php';
             deleteButton.classList.add('delete-file');
             deleteButton.addEventListener('click', function () {
                 listItem.remove(); // Remove the file from the list
+                // Find the index of the file in the licenseFiles array and remove it
+                const index = licenseFiles.indexOf(file);
+                if (index > -1) {
+                    licenseFiles.splice(index, 1); // Remove the file from the array
+                }
             });
 
             

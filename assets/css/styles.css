@@ -19,7 +19,9 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    max-width: 1500px;
 }
+
 
 .display-files-container{
     display: flex;
@@ -29,6 +31,11 @@ body {
     gap: 100px;
     margin: 20px;
 }
+.display-files-row{
+    display: flex;
+    flex-direction: row;
+}
+
 
 .grid-container {
     display: grid;
@@ -166,6 +173,153 @@ input[type="file"] {
 .form-group.full-width {
     grid-column: span 2;
 }
+
+
+.ticket-listing-container .pagination {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+    background-color: #f1f1f1;
+    width: 100%;
+    border: 1px solid #292929;
+    padding: 10px;
+}
+
+.ticket-listing-container .pagination a {
+    padding: 8px 16px;
+    margin: 0 5px;
+    text-decoration: none;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+}
+
+.ticket-listing-container .pagination a:hover {
+    background-color: #ddd;
+}
+
+.ticket-listing-container .pagination span {
+    padding: 8px 16px;
+}
+
+
+.ticket-table {
+    width: 90%;
+    margin: 20px auto;
+    border-collapse: collapse; /* Ensures no double borders */
+    background-color: #fff;
+}
+
+.ticket-table th, .ticket-table td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #292929; /* Adds border between columns and rows */
+}
+
+.ticket-table th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.ticket-table tr:nth-child(even) {
+    background-color: #cdcccc; /* Light gray for even rows */
+}
+
+.ticket-table tr:nth-child(odd) {
+    background-color: #ffffff; /* White for odd rows */
+}
+
+.ticket-table tbody tr:hover {
+    background-color: #b4cfe6; /* Hover effect for the hovered row */
+}
+
+
+.ticket-table td, .ticket-table th {
+    border-right: 1px solid #292929; /* Adds vertical lines between cells */
+}
+
+/* Target the "Uploaded At" column with a specific class */
+.ticket-table td.uploaded-at, .ticket-table th.uploaded-at {
+    min-width: 150px; 
+}
+
+.ticket-table a:hover{
+    color: #0056b3;
+}
+.ticket-table span {
+    margin: 0 8px; /* Adds space to the left and right of the separator */
+    font-weight: normal;
+    color: #333;
+}
+
+
+.ticket-details-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;  
+    max-width: 1200px;
+    margin: 20px;
+}
+.ticket-details-container .tickets-string-details{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    max-width: 1000px;
+}
+.tickets-string-details .info-container{
+    flex:1;
+    text-align: left;
+    padding: 10px;
+    width: 48%;
+}
+
+
+
+
+.tickets-string-details ul {
+    list-style-type: none; /* Remove bullets */
+    padding: 0px; 
+    margin: 0px;
+}
+.tickets-string-details li {
+    list-style-type: none; /* Remove default list styling */
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    gap: 10px;
+    padding-left: 20px;
+}
+
+
+
+.tickets-string-details strong {
+    font-weight: bold; /* Ensure strong text is bold */
+}
+.ticket-details-container .title-text{
+    font-size: 30px;
+    width: 100%;
+    padding: 10px;
+    font-weight: 600;
+    margin-top: 20px;
+    color: grey;
+    border-top: 2px solid #9c9c9c; 
+    border-bottom: 2px solid #9c9c9c; 
+    align-self: flex-start;
+}
+.ticket-details-container .subtitle-text{
+    font-size: 20px;
+    font-weight: 600;
+    color: grey;
+}
+
+
+
+
+
+
+
+
 button {
     margin-top: 50px;
     padding: 10px;
@@ -179,6 +333,8 @@ button {
 button:hover {
     background-color: #0056b3;
 }
+
+
 
 .align-left{
     text-align: left;

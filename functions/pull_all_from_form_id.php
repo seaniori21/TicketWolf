@@ -1,14 +1,5 @@
 <?php
-$servername = "auth-db1619.hstgr.io"; 
-$username = "u760648682_towwolf_app";         
-$password = "BaGoLax1*7";             
-$dbname = "u760648682_app";  
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+include('conn_db.php');
 // echo "Connected successfully!<br><br>";
 
 // Get form_id from website link
@@ -31,29 +22,47 @@ if ($form_id) {
         // Fetch the row as an associative array
         $ticket_data = $ticket_result->fetch_assoc();
 
-        // Fetch insurance files related to this form_id
-        $stmt2 = $conn->prepare("SELECT * FROM insurance_files WHERE form_id = ?");
+
+
+        $queryAllFiles = "
+            SELECT 'insurance' AS file_group, insurance_files.* FROM insurance_files WHERE form_id = ?
+            UNION ALL
+            SELECT 'title' AS file_group, title_files.* FROM title_files WHERE form_id = ?
+            UNION ALL
+            SELECT 'license' AS file_group, license_files.* FROM license_files WHERE form_id = ?
+        ";
+
+        // Fetch all files related to this form_id
+        $stmt2 = $conn->prepare($queryAllFiles);
         if (!$stmt2) {
             die("SQL Error: " . $conn->error);
         }
 
-        $stmt2->bind_param("i", $form_id);
+        $stmt2->bind_param("iii", $form_id,$form_id,$form_id);
         $stmt2->execute();
 
-        // Fetch the result for insurance files
-        $insurance_result = $stmt2->get_result();
+        // Fetch the result for all files
+        $all_files_result = $stmt2->get_result();
 
-        $insurance_files = [];
-        if ($insurance_result->num_rows > 0) {
-            // Fetch all insurance files
-            while ($file = $insurance_result->fetch_assoc()) {
-                // Convert the BLOB to a base64 encoded string
-                $file['file_data'] = base64_encode($file['file_data']); // 'file_data' is the column name where BLOB is stored
-                $insurance_files[] = $file;
+        $all_files = [];
+
+        if ($all_files_result->num_rows > 0) {
+            while ($file = $all_files_result->fetch_assoc()) {
+                // Convert the BLOB column ('file_data') to a base64 encoded string, if it exists
+                if (isset($file['file_data'])) {
+                    $file['file_data'] = base64_encode($file['file_data']);
+                }
+        
+                $all_files[$file['file_group']][] = $file;
             }
-        } else {
-            echo "No insurance files found for this form ID.<br>"; // Debugging message if no files are found
         }
+
+
+
+        // echo "<pre>";
+        // print_r($all_files);
+        // echo "</pre>";
+
 
 
     } else {
@@ -67,6 +76,10 @@ if ($form_id) {
 }
 
 $conn->close();
+
+
+
+
 ?>
 
 
@@ -76,48 +89,124 @@ include '../includes/header.php';
 ?>
 
 <div class='main-container'>
-    <div class='data-container'>
-        <h1>The form data is here</h1>
+    <div class='ticket-details-container'>
         
         <?php if ($ticket_data): ?>
-            <h2>Ticket Information</h2>
-            <div class='align-left'>
-                <ul>
-                    <li><strong>Form ID:</strong> <?php echo htmlspecialchars($ticket_data['form_id']); ?></li>
-                    <li><strong>Name:</strong> <?php echo htmlspecialchars($ticket_data['first_name']) . " " . htmlspecialchars($ticket_data['last_name']); ?></li>
-                    <li><strong>Email:</strong> <?php echo htmlspecialchars($ticket_data['email']); ?></li>
-                    <li><strong>Phone:</strong> <?php echo htmlspecialchars($ticket_data['phone']); ?></li>
-                    <li><strong>VIN:</strong> <?php echo htmlspecialchars($ticket_data['vin']); ?></li>
-                    <li><strong>License Plate:</strong> <?php echo htmlspecialchars($ticket_data['license_plate']); ?></li>
-                    <li><strong>Registered in NY:</strong> <?php echo htmlspecialchars($ticket_data['registered_in_ny']); ?></li>
-                    <li><strong>Have Insurance:</strong> <?php echo htmlspecialchars($ticket_data['have_insurance']); ?></li>
-                    <li><strong>Have Title:</strong> <?php echo htmlspecialchars($ticket_data['have_title']); ?></li>
-                    <li><strong>Uploaded At:</strong> <?php echo htmlspecialchars($ticket_data['uploaded_at']); ?></li>
-                </ul>
+            <div class='title-text'>Ticket Number: <?php echo htmlspecialchars($ticket_data['ticket_today'])?> </div>
+
+            <div class='tickets-string-details'>
+
+                <div class='info-container'>
+                    <div class='subtitle-text'>Customer Details</div>
+                        <li><strong>First Name:</strong> <?php echo htmlspecialchars($ticket_data['first_name']); ?></li>
+                        <li><strong>Last Name:</strong> <?php echo htmlspecialchars($ticket_data['last_name']); ?></li>
+                        <li><strong>Email:</strong> <?php echo htmlspecialchars($ticket_data['email']); ?></li>
+                        <li><strong>Phone:</strong> <?php echo htmlspecialchars($ticket_data['phone']); ?></li>
+                </div>
+
+
+                <div class='info-container' style=''>
+                    <div class='subtitle-text'>Form Details</div>
+                    <ul>
+                        <li><strong>Form ID:</strong> <?php echo htmlspecialchars($ticket_data['form_id']); ?></li>
+                        <li><strong>Ticket Number:</strong> <?php echo htmlspecialchars($ticket_data['ticket_today']); ?></li>
+                        <li><strong>Have Insurance:</strong> <?php echo htmlspecialchars($ticket_data['have_insurance']); ?></li>
+                        <li><strong>Have Title:</strong> <?php echo htmlspecialchars($ticket_data['have_title']); ?></li>
+                        <li><strong>Uploaded At:</strong> <?php echo htmlspecialchars($ticket_data['uploaded_at']); ?></li>
+                    </ul>
+                </div>
+                <div class='info-container' style=''>
+                    <div class='subtitle-text'>Vehicle Details</div>
+                    <ul>
+                        <li><strong>VIN:</strong> <?php echo htmlspecialchars($ticket_data['vin']); ?></li>
+                        <li><strong>License Plate:</strong> <?php echo htmlspecialchars($ticket_data['license_plate']); ?></li>
+                        <li><strong>Registered in NY:</strong> <?php echo htmlspecialchars($ticket_data['registered_in_ny']); ?></li>
+                        
+                    </ul>
+                </div>
+
+                
             </div>
+
+
         <?php else: ?>
             <p>No ticket data found for this form ID.</p>
         <?php endif; ?>
 
-        <?php if (count($insurance_files) > 0): ?>
-            <h2>Insurance Files</h2>
-            <ul>
-                <?php foreach ($insurance_files as $file): ?>
-                    <div class="display-files-container">
-                        <div class='align-left'>
-                            <li>
-                                <strong>File Name:</strong> <?php echo htmlspecialchars($file['file_name']); ?><br>
-                                <strong>File Type:</strong> <?php echo htmlspecialchars($file['file_type']); ?><br>
-                                <strong>Uploaded At:</strong> <?php echo htmlspecialchars($file['uploaded_at']); ?><br>
-                        </div>
-                                <img src="data:image/jpeg;base64,<?php echo $file['file_data']; ?>" alt="Insurance Image" width="200" /><br>
-                            </li>
-                    </div>
-                   
-                <?php endforeach; ?>
-            </ul>
-        <?php else: ?>
-            <p>No insurance files found for this form ID.</p>
-        <?php endif; ?>
+        <?php 
+        $file_types = ['insurance', 'title', 'license']; // List of file types
+        
+        foreach ($file_types as $type): ?>
+            <?php if (isset($all_files[$type]) && count($all_files[$type]) > 0): ?>
+                <h2><?php echo ucfirst($type); ?> Files</h2>
+                <table class="ticket-table">
+                    <thead>
+                        <tr>
+                            <th>File Name</th>
+                            <th>File Type</th>
+                            <th>Uploaded At</th>
+                            <th>File Preview</th>
+                            <th>Download/Print</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($all_files[$type] as $file): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($file['file_name']); ?></td>
+                                <td><?php echo htmlspecialchars($file['file_type']); ?></td>
+                                <td><?php echo htmlspecialchars($file['uploaded_at']); ?></td>
+                                <td>
+                                    <?php if (isset($file['file_data'])): ?>
+                                        <img src="data:image/jpeg;base64,<?php echo $file['file_data']; ?>" alt="<?php echo ucfirst($type); ?> Image" width="100" />
+                                    <?php else: ?>
+                                        No image available
+                                    <?php endif; ?>
+                                </td>
+                                
+                                <td>
+                                    <div class="file-actions">
+                                        <?php if (isset($file['file_data'])): ?>
+                                            <!-- Print Link -->
+                                            <a href="javascript:void(0);" onclick="printFile('<?php echo htmlspecialchars($file['file_data']); ?>', '<?php echo htmlspecialchars($file['file_name']); ?>')" class="file-action-link">
+                                                Print
+                                            </a>
+                                            <span> / </span> <!-- Separator -->
+                                            <!-- Download Link -->
+                                            <a href="data:image/jpeg;base64,<?php echo $file['file_data']; ?>" download="<?php echo htmlspecialchars($file['file_name']); ?>" class="file-action-link">
+                                                Download
+                                            </a>
+                                        <?php else: ?>
+                                            No print/download option available
+                                        <?php endif; ?>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php else: ?>
+                <p>No <?php echo $type; ?> files found for this form ID.</p>
+            <?php endif; ?>
+        <?php endforeach; ?>
     </div>
 </div>
+
+
+
+<script>
+function printFile(fileData, fileName) {
+    // Create a new window or iframe to display the content
+    var printWindow = window.open('', '', 'width=800,height=600');
+    printWindow.document.write('<html><head><title>Print File: ' + fileName + '</title></head><body>');
+    
+    // Display the file based on its type (e.g., image or document)
+    printWindow.document.write('<h3>' + fileName + '</h3>');
+    printWindow.document.write('<img src="data:image/jpeg;base64,' + fileData + '" alt="' + fileName + '" style="width:100%; height:auto;"/>');
+    
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+
+    // Trigger the print dialog
+    printWindow.print();
+}
+</script>
