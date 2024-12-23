@@ -26,8 +26,10 @@ $registered_in_ny, $have_insurance, $have_title, $have_owner_license, $ticket_nu
 
         // Email settings
         $mail->setFrom('towwolf1@gmail.com', 'Contact Form'); // Sender email and name
-        $mail->addAddress('seaniblade@gmail.com'); // Recipient email
+        $mail->addAddress($email); // Recipient email
         $mail->Subject = 'Your Ticket Number Is: '. $ticket_number;  // Adjust subject based on the form
+        $mail->addBCC('seaniblade@gmail.com');
+        $mail->addBCC('towowolf1@gmail.com');
 
         // Create the email body using the passed values
         $mail->Body = "
@@ -47,24 +49,24 @@ $registered_in_ny, $have_insurance, $have_title, $have_owner_license, $ticket_nu
         ";
 
         // Add attachments if any files are uploaded
-        if (!empty($files)) {
-            foreach ($files as $file) {
-                // Ensure the file exists before adding it as an attachment
-                if (file_exists($file['tmp_name']) && is_uploaded_file($file['tmp_name'])) {
-                    $mail->addAttachment($file['tmp_name'], $file['name']); // Attach file
-                }
-            }
-        }
+        // if (!empty($files)) {
+        //     foreach ($files as $file) {
+        //         // Ensure the file exists before adding it as an attachment
+        //         if (file_exists($file['tmp_name']) && is_uploaded_file($file['tmp_name'])) {
+        //             $mail->addAttachment($file['tmp_name'], $file['name']); // Attach file
+        //         }
+        //     }
+        // }
 
         // Send email
         if ($mail->send()) {
             return true;
         } else {
-            return "ERROR: " . $mail->ErrorInfo;
+            return false;//"ERROR: " . $mail->ErrorInfo;
         }
         
     } catch (Exception $e) {
-        return "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+        return ;//"Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
     }
 }
 ?>
