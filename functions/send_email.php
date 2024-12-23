@@ -7,7 +7,7 @@ require '../PHPMailer/src/PHPMailer.php';
 require '../PHPMailer/src/SMTP.php';
 
 function sendEmail($first_name, $last_name, $email, $phone, $vin, $drivers_license, $license_plate, $is_owner, 
-$registered_in_ny, $have_insurance, $have_title, $have_owner_license, $ticket_number, $files = []) {
+$registered_in_ny, $have_insurance, $have_title, $have_owner_license, $ticket_number,  $insuranceFiles = [], $titleFiles = [], $licenseFiles = [] ) {
     $mail = new PHPMailer;
 
     // Enable SMTP debugging for testing purposes
@@ -28,35 +28,67 @@ $registered_in_ny, $have_insurance, $have_title, $have_owner_license, $ticket_nu
         $mail->setFrom('towwolf1@gmail.com', 'Contact Form'); // Sender email and name
         $mail->addAddress($email); // Recipient email
         $mail->Subject = 'Your Ticket Number Is: '. $ticket_number;  // Adjust subject based on the form
-        $mail->addBCC('seaniblade@gmail.com');
+        $mail->addBCC('aaraflol42@gmail.com');
         $mail->addBCC('towowolf1@gmail.com');
 
-        // Create the email body using the passed values
+        // HTML email body
+        $mail->isHTML(true);  // Enable HTML in the body
         $mail->Body = "
-            First Name: $first_name\n
-            Last Name: $last_name\n
-            Email: $email\n
-            Phone: $phone\n
-            VIN: $vin\n
-            Driver's License: $drivers_license\n
-            License Plate: $license_plate\n
-            Is Owner: $is_owner\n
-            Registered in NY: $registered_in_ny\n
-            Have Insurance: $have_insurance\n
-            Have Title: $have_title\n
-            Have Owner's License: $have_owner_license\n
-            Ticket Number: $ticket_number
-        ";
+            <p><strong>First Name:</strong> $first_name</p>
+            <p><strong>Last Name:</strong> $last_name</p>
+            <p><strong>Email:</strong> $email</p>
+            <p><strong>Phone:</strong> $phone</p>
+            <p><strong>VIN:</strong> $vin</p>
+            <p><strong>Driver's License:</strong> $drivers_license</p>
+            <p><strong>License Plate:</strong> $license_plate</p>
+            <p><strong>Is Owner:</strong> $is_owner</p>
+            <p><strong>Registered in NY:</strong> $registered_in_ny</p>
+            <p><strong>Have Insurance:</strong> $have_insurance</p>
+            <p><strong>Have Title:</strong> $have_title</p>
+            <p><strong>Have Owner's License:</strong> $have_owner_license</p>
+            <p><strong>Ticket Number:</strong> $ticket_number</p>
 
-        // Add attachments if any files are uploaded
-        // if (!empty($files)) {
-        //     foreach ($files as $file) {
-        //         // Ensure the file exists before adding it as an attachment
-        //         if (file_exists($file['tmp_name']) && is_uploaded_file($file['tmp_name'])) {
-        //             $mail->addAttachment($file['tmp_name'], $file['name']); // Attach file
-        //         }
-        //     }
-        // }
+            <h3>Insurance Documents</h3>
+            <ul>";
+
+        if (!empty($insuranceFiles)) {
+            foreach ($insuranceFiles as $file) {
+                $mail->addAttachment($file['tmp_name'], $file['name']); // Attach file
+                $mail->Body .= "<li>" . htmlspecialchars($file['name']) . "</li>"; // Display attached file name in the email
+            }
+        } else {
+            $mail->Body .= "<li>No insurance files uploaded.</li>";
+        }
+
+        $mail->Body .= "</ul>";
+
+        // Title Files
+        $mail->Body .= "<h3>Title Documents</h3><ul>";
+
+        if (!empty($titleFiles)) {
+            foreach ($titleFiles as $file) {
+                $mail->addAttachment($file['tmp_name'], $file['name']); // Attach file
+                $mail->Body .= "<li>" . htmlspecialchars($file['name']) . "</li>"; // Display attached file name in the email
+            }
+        } else {
+            $mail->Body .= "<li>No title files uploaded.</li>";
+        }
+
+        $mail->Body .= "</ul>";
+
+        // License Files
+        $mail->Body .= "<h3>License Documents</h3><ul>";
+
+        if (!empty($licenseFiles)) {
+            foreach ($licenseFiles as $file) {
+                $mail->addAttachment($file['tmp_name'], $file['name']); // Attach file
+                $mail->Body .= "<li>" . htmlspecialchars($file['name']) . "</li>"; // Display attached file name in the email
+            }
+        } else {
+            $mail->Body .= "<li>No license files uploaded.</li>";
+        }
+
+        $mail->Body .= "</ul>";
 
         // Send email
         if ($mail->send()) {
