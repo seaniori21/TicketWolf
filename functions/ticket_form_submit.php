@@ -233,17 +233,4 @@ $conn->close();
 exit();
 
 
-
-// header("Location: https://example.com");
-// exit();
-// header("Location: ../pages/ThankYou.php?form_id=" . );
-// exit(); // Ensure no further code runs after the redirect
-
-
-
-// Redirect to a new page
-// header("Location: ../pages/TicketForm.php");
-// exit();
-
-
 ?>
