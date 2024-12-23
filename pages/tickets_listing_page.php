@@ -30,7 +30,7 @@ $conn->close();
 include '../includes/header.php';
 ?>
 
-<div class='main-container'>
+<div class='white-container'>
     <div class='data-container'>
         <div class='ticket-listing-container'>
             <h2>Ticket Listings</h2>

@@ -88,7 +88,7 @@ $conn->close();
 include '../includes/header.php';
 ?>
 
-<div class='main-container'>
+<div class='white-container'>
     <div class='ticket-details-container'>
         
         <?php if ($ticket_data): ?>

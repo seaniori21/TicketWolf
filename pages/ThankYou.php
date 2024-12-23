@@ -14,7 +14,7 @@ if (isset($_GET['ticket'])) {
 
 <div class='main-container'>
 
-    <div class='form-container '>
+    <div class='form-container'>
         <h1>Your response has been filed!</h1>
 
         <h2>Your ticket number is: <?php echo htmlspecialchars($ticket); ?></h2>

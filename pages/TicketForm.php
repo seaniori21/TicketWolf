@@ -4,6 +4,7 @@ include '../includes/header.php';
 ?>
 
 <div class="main-container">
+    <img src="../assets/img/banner_tw.png" alt="Top Right Image" class="top-right-image">
     <h1>Ticket Request Form</h1>
 
     <div class="form-container">

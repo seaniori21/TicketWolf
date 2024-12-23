@@ -11,8 +11,8 @@ $registered_in_ny, $have_insurance, $have_title, $have_owner_license, $ticket_nu
     $mail = new PHPMailer;
 
     // Enable SMTP debugging for testing purposes
-    $mail->SMTPDebug = 2; // Or SMTP::DEBUG_SERVER
-    $mail->Debugoutput = 'html';
+    // $mail->SMTPDebug = 2; // Or SMTP::DEBUG_SERVER
+    // $mail->Debugoutput = 'html';
 
     try {
         // SMTP settings
