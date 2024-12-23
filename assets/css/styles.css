@@ -1,5 +1,6 @@
 :root {
-    --custom-dark-mode: #1a1a1a; /* Replace with your desired blue */
+    --custom-dark-mode: #1a1a1a; 
+    --custom-blue-testy: #3498db;
 }
 
 
@@ -22,12 +23,21 @@ body {
     position: relative;
 }
 .top-right-image {
-    position: absolute;
-    top: 10px; /* Adjust as needed */
-    right: 10px; /* Adjust as needed */
-    width: 15%; /* Adjust size */
+    width: 30%; /* Adjust size */
     height: auto; /* Maintain aspect ratio */
-    z-index: 10; /* Ensure it stays on top */
+}
+.ben-nino{
+    font-weight: 600;
+    font-family:  'Dancing Script', cursive;
+    font-size: 25px;
+}
+.header-container{
+    padding-top: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
 }
 .dark-mode *{
     background-color: var(--custom-dark-mode);
@@ -389,6 +399,9 @@ button:hover {
         transform: rotate(360deg);
     }
 }
+@media (max-width:767){
+    
+}
 
 
 @media (min-width: 768px) {
@@ -409,5 +422,17 @@ button:hover {
         background-color: var(--custom-dark-mode);
         color:white;   
     }
+    .top-right-image {
+        top: 10px; /* Adjust as needed */
+        right: 10px; /* Adjust as needed */
+        width: 15%; /* Adjust size */
+        height: auto; /* Maintain aspect ratio */
+        z-index: 10; /* Ensure it stays on top */
+        position: absolute;
+    }
+    .ben-nino{
+        display: none;
+    }
+    
 
 }

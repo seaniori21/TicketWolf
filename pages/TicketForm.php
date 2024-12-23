@@ -4,7 +4,12 @@ include '../includes/header.php';
 ?>
 
 <div class="main-container">
-    <img src="../assets/img/banner_tw.png" alt="Top Right Image" class="top-right-image">
+    <div class='header-container'>
+        <img src="../assets/img/banner_tw.png" alt="Top Right Image" class="top-right-image">
+        <div class='ben-nino'>
+            <span style="color:#4169e1">Ben</span><span style="color:#ff6347">&</span><span style="color:#4169e1">Nino</span>
+        </div>
+    </div>
     <h1>Ticket Request Form</h1>
 
     <div class="form-container">

@@ -106,7 +106,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 if ($stmt2->execute()) {
                     //echo "Insurance file uploaded successfully: " . htmlspecialchars($file_name) . "<br>";
                 } else {
-                    echo "Error uploading insurance file: " . $stmt2->error . "<br>";
+                    //echo "Error uploading insurance file: " . $stmt2->error . "<br>";
                 }
                 $stmt2->close();
             }
@@ -150,7 +150,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 if ($stmt2->execute()) {
                     //echo "title file uploaded successfully: " . htmlspecialchars($file_name) . "<br>";
                 } else {
-                    echo "Error uploading title file: " . $stmt2->error . "<br>";
+                    //echo "Error uploading title file: " . $stmt2->error . "<br>";
                 }
                 $stmt2->close();
             }
@@ -194,7 +194,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 if ($stmt2->execute()) {
                     //echo "license file uploaded successfully: " . htmlspecialchars($file_name) . "<br>";
                 } else {
-                    echo "Error uploading license file: " . $stmt2->error . "<br>";
+                    //echo "Error uploading license file: " . $stmt2->error . "<br>";
                 }
                 $stmt2->close();
             }
@@ -202,29 +202,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
         // Call the sendEmail function after the form is processed, email_result is a boolean of success
-        $email_result = sendEmail($first_name, $last_name, $email, $phone, $vin, $drivers_license,
+        sendEmail($first_name, $last_name, $email, $phone, $vin, $drivers_license,
         $license_plate, $is_owner, $registered_in_ny, $have_insurance, $have_title, $have_owner_license, $ticket_today, 
         $insuranceFiles, $titleFiles, $licenseFiles);
 
-        if ($email_result === true) {
-            // echo "Email sent successfully";
-        } else {
-            echo $email_result; // Output error message if email fails
-        }
+
 
 
         echo json_encode(['status' => 'success', 'ticket' => $ticket_today]);
 
 
     } else {
-        echo "Error: " . $stmt->error;
+        //echo "Error: " . $stmt->error;
     }
 
     $stmt->close();
 
 
 } else {
-    echo "Invalid request.";
+    //echo "Invalid request.";
 }
 
 $conn->close();
