@@ -4,13 +4,15 @@ include '../includes/header.php';
 ?>
 
 <div class="main-container">
-    <div class='header-container'>
-        <img src="../assets/img/banner_tw.png" alt="Top Right Image" class="top-right-image">
-        <div class='ben-nino'>
-            <span style="color:#4169e1">Ben</span><span style="color:#ff6347">&</span><span style="color:#4169e1">Nino</span>
+    <div >
+        <div class='header-container'>
+            <img src="../assets/img/banner_tw.png" alt="Top Right Image" class="top-right-image">
+            <div class='ben-nino'>
+                <span style="color:#4169e1">Ben</span><span style="color:#ff6347">&</span><span style="color:#4169e1">Nino</span>
+            </div>
         </div>
     </div>
-    <h1>Ticket Request Form</h1>
+    <h1>Line Placement Form</h1>
 
     <div class="form-container">
         <form action="../functions/ticket_form_submit.php" method="post" enctype="multipart/form-data">
@@ -50,7 +52,15 @@ include '../includes/header.php';
                     <input type="text" id="license-plate" name="license_plate">
                 </div>
 
-                <div></div>
+
+            </div>
+            <!-- END OF FORM GRID -->
+
+
+
+
+
+            <div class='form-file-section'>
 
 
                 <div class="form-group">
@@ -81,80 +91,83 @@ include '../includes/header.php';
                     </div>
                 </div>
 
-            </div>
-            <!-- END OF FORM GRID -->
 
+                <div class="form-group">
+                    <div class="form-group-files">
+                        <label>Have Insurance?<span class="required">*</span></label>
+                        <div class="row-flex">
+                            <div class="">
+                                <input type="radio" id="insurance-yes" name="have_insurance" value="yes" required>
+                                <label for="insurance-yes" class="checkbox-label">Yes</label>
+                            </div>
+                            <div class="">
+                                <input type="radio" id="insurance-no" name="have_insurance" value="no" required>
+                                <label for="insurance-no" class="checkbox-label">No</label>
+                            </div>
+                        </div>
+                    </div>
 
-            <div class="form-group">
-                <div class="form-group-files">
-                    <label>Have Insurance? <span class="required">*</span></label>
-                    <div class="row-flex">
-                        <div class="">
-                            <input type="radio" id="insurance-yes" name="have_insurance" value="yes" required>
-                            <label for="insurance-yes" class="checkbox-label">Yes</label>
-                        </div>
-                        <div class="">
-                            <input type="radio" id="insurance-no" name="have_insurance" value="no" required>
-                            <label for="insurance-no" class="checkbox-label">No</label>
-                        </div>
+                    <!-- Hidden file upload section -->
+                    <div class="file-upload-section" id="insurance-file-upload-section" style="display: none;">
+                        <label for="insurance-files">Upload Insurance Document:</label>
+                        <input type="file" id="insurance-files" name="insurance_files[]" multiple >
+                        <div class="file-list" id="insurance-file-list"></div>
                     </div>
                 </div>
 
-                <!-- Hidden file upload section -->
-                <div class="file-upload-section" id="insurance-file-upload-section" style="display: none;">
-                    <label for="insurance-files">Upload Insurance Document:</label>
-                    <input type="file" id="insurance-files" name="insurance_files[]" multiple >
-                    <div class="file-list" id="insurance-file-list"></div>
-                </div>
-            </div>
 
+                <div class="form-group">
+                    <div class="form-group-files">
+                        <label>Have Title?<span class="required">*</span></label>
+                        <div class="row-flex">
+                            <div class="">
+                                <input type="radio" id="title-yes" name="have_title" value="yes" required>
+                                <label for="title-yes" class="checkbox-label">Yes</label>
+                            </div>
+                            <div class="">
+                                <input type="radio" id="title-no" name="have_title" value="no" required>
+                                <label for="title-no" class="checkbox-label">No</label>
+                            </div>
+                        </div>
+                    </div>
 
-            <div class="form-group">
-                <div class="form-group-files">
-                    <label>Have Title?<span class="required">*</span></label>
-                    <div class="row-flex">
-                        <div class="">
-                            <input type="radio" id="title-yes" name="have_title" value="yes" required>
-                            <label for="title-yes" class="checkbox-label">Yes</label>
-                        </div>
-                        <div class="">
-                            <input type="radio" id="title-no" name="have_title" value="no" required>
-                            <label for="title-no" class="checkbox-label">No</label>
-                        </div>
+                    <!-- Hidden file upload section -->
+                    <div class="file-upload-section" id="title-file-upload-section" style="display: none;">
+                        <label for="title-files">Upload Title Document:</label>
+                        <input type="file" id="title-files" name="title_files[]" multiple>
+                        <div class="file-list" id="title-file-list"></div>
                     </div>
                 </div>
 
-                <!-- Hidden file upload section -->
-                <div class="file-upload-section" id="title-file-upload-section" style="display: none;">
-                    <label for="title-files">Upload Title Document:</label>
-                    <input type="file" id="title-files" name="title_files[]" multiple>
-                    <div class="file-list" id="title-file-list"></div>
-                </div>
-            </div>
 
+                <div class="form-group">
+                    <div class="form-group-files">
+                        <label>Have Vehicle Owner's Driver's License?<span class="required">*</span></label>
+                        <div class="row-flex">
+                            <div class="">
+                                <input type="radio" id="license-yes" name="have_owner_license" value="yes" required>
+                                <label for="license-yes" class="checkbox-label">Yes</label>
+                            </div>
+                            <div class="">
+                                <input type="radio" id="license-no" name="have_owner_license" value="no" required>
+                                <label for="license-no" class="checkbox-label">No</label>
+                            </div>
+                        </div>
+                    </div>
 
-            <div class="form-group">
-                <div class="form-group-files">
-                    <label>Have Vehicle Owner's Driver's License?<span class="required">*</span></label>
-                    <div class="row-flex">
-                        <div class="">
-                            <input type="radio" id="license-yes" name="have_owner_license" value="yes" required>
-                            <label for="license-yes" class="checkbox-label">Yes</label>
-                        </div>
-                        <div class="">
-                            <input type="radio" id="license-no" name="have_owner_license" value="no" required>
-                            <label for="license-no" class="checkbox-label">No</label>
-                        </div>
+                    <!-- Hidden file upload section -->
+                    <div class="file-upload-section" id="license-file-upload-section" style="display: none;">
+                        <label for="license-files">Upload License Document:</label>
+                        <input type="file" id="license-files" name="license_files[]" multiple>
+                        <div class="file-list" id="license-file-list"></div>
                     </div>
                 </div>
 
-                <!-- Hidden file upload section -->
-                <div class="file-upload-section" id="license-file-upload-section" style="display: none;">
-                    <label for="license-files">Upload License Document:</label>
-                    <input type="file" id="license-files" name="license_files[]" multiple>
-                    <div class="file-list" id="license-file-list"></div>
-                </div>
             </div>
+
+
+
+
 
             <div id="loading-indicator" style="display: none;">
                 <p>Submitting your form... <span class="spinner">🔄</span></p>
@@ -216,7 +229,11 @@ include '../includes/header.php';
             listItem.appendChild(deleteButton);
             insuranceFileList.appendChild(listItem);
         });
-        // insuranceFileInput.value ='';
+        // Change button label to "Add More"
+    console.log(insuranceFiles);
+
+// Optionally clear the input value to allow re-uploading the same file
+insuranceFileInput.value = '';
     });
 
 

@@ -2,7 +2,7 @@
 include('../functions/conn_db.php'); // Include the database connection
 
 // Set the number of rows per page
-$rows_per_page = 50;
+$rows_per_page =10;
 
 // Get the current page number from the query string, default to page 1 if not set
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -32,8 +32,8 @@ include '../includes/header.php';
 
 <div class='white-container'>
     <div class='data-container'>
+    <h2>Ticket Listings</h2>
         <div class='ticket-listing-container'>
-            <h2>Ticket Listings</h2>
             <table class="ticket-table">
                 <thead>
                     <tr> 
@@ -84,20 +84,22 @@ include '../includes/header.php';
                 </tbody>
             </table>
 
-            <!-- Pagination Links -->
+
+
+        </div>
+
+        <div class='ticket-listing-container'>
             <div class="pagination">
-                <?php if ($page > 1): ?>
-                    <a href="?page=<?php echo $page - 1; ?>">Previous</a>
-                <?php endif; ?>
+                    <?php if ($page > 1): ?>
+                        <a href="?page=<?php echo $page - 1; ?>">Previous</a>
+                    <?php endif; ?>
 
-                <span>Page <?php echo $page; ?> of <?php echo $total_pages; ?></span>
+                    <span>Page <?php echo $page; ?> of <?php echo $total_pages; ?></span>
 
-                <?php if ($page < $total_pages): ?>
-                    <a href="?page=<?php echo $page + 1; ?>">Next</a>
-                <?php endif; ?>
+                    <?php if ($page < $total_pages): ?>
+                        <a href="?page=<?php echo $page + 1; ?>">Next</a>
+                    <?php endif; ?>
             </div>
-
-
         </div>
     </div>
 </div>
