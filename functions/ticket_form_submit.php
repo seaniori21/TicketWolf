@@ -247,11 +247,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Call the sendEmail function after the form is processed, email_result is a boolean of success
             sendEmailClerk($emailArray[$i],$first_name, $last_name, $email, $phone, $vin, $drivers_license,
             $license_plate, $is_owner, $registered_in_ny, $have_insurance, $have_title, $have_owner_license, $ticket_today, 
-            $insuranceFiles, $titleFiles, $licenseFiles);
+            $insuranceFiles, $titleFiles, $licenseFiles,$registrationFiles);
         }
-
-
-
 
         sendEmailCustomer($first_name, $last_name, $email, $phone, $vin, $drivers_license,
         $license_plate, $is_owner, $registered_in_ny, $have_insurance, $have_title, $have_owner_license, $ticket_today, 
