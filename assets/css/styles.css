@@ -220,7 +220,7 @@ input[type="file"] {
 }
 .form-group input,
 .form-group select {
-    padding: 6px;
+    padding: 4px;
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 16px;

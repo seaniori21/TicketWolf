@@ -241,15 +241,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         }
         
+        $emailArray = ["towwolf1@gmail.com", "aaraflol42@gmail.com"];
+
+        for ($i = 0; $i < count($emailArray); $i++) {
+            // Call the sendEmail function after the form is processed, email_result is a boolean of success
+            sendEmailClerk($emailArray[$i],$first_name, $last_name, $email, $phone, $vin, $drivers_license,
+            $license_plate, $is_owner, $registered_in_ny, $have_insurance, $have_title, $have_owner_license, $ticket_today, 
+            $insuranceFiles, $titleFiles, $licenseFiles);
+        }
 
 
-        // Call the sendEmail function after the form is processed, email_result is a boolean of success
-        sendEmailClerk("towwolf1@gmail.com",$first_name, $last_name, $email, $phone, $vin, $drivers_license,
-        $license_plate, $is_owner, $registered_in_ny, $have_insurance, $have_title, $have_owner_license, $ticket_today, 
-        $insuranceFiles, $titleFiles, $licenseFiles);
-        sendEmailClerk("aaraflol42@gmail.com",$first_name, $last_name, $email, $phone, $vin, $drivers_license,
-        $license_plate, $is_owner, $registered_in_ny, $have_insurance, $have_title, $have_owner_license, $ticket_today, 
-        $insuranceFiles, $titleFiles, $licenseFiles);
+
+
         sendEmailCustomer($first_name, $last_name, $email, $phone, $vin, $drivers_license,
         $license_plate, $is_owner, $registered_in_ny, $have_insurance, $have_title, $have_owner_license, $ticket_today, 
         $insuranceFiles, $titleFiles, $licenseFiles);
