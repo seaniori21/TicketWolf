@@ -55,6 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $insuranceFiles = [];
     $licenseFiles = [];
     $titleFiles = [];
+    $registrationFiles = [];
 
 
 
@@ -199,6 +200,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $stmt2->close();
             }
         }
+        if (isset($_FILES['registration_files']) && !empty($_FILES['registration_files']['name'][0])) {
+            // echo "Uploading registration files<br>";
+            $files = $_FILES['registration_files'];
+        
+            for ($i = 0; $i < count($files['name']); $i++) {
+                $file_name = $files['name'][$i];
+                $file_type = $files['type'][$i];
+                $file_tmp = $files['tmp_name'][$i];
+                $file_data = file_get_contents($file_tmp);
+        
+                if ($files['error'][$i] === UPLOAD_ERR_OK) {
+                    $registrationFiles[] = [
+                        'tmp_name' => $files['tmp_name'][$i], // Temporary file path
+                        'name' => $files['name'][$i],         // Original file name
+                        'type' => $files['type'][$i],         // File MIME type
+                        'data' => file_get_contents($files['tmp_name'][$i]) // File content (optional, if needed)
+                    ];
+                } 
+        
+                // Prepare SQL statement for registration table
+                $stmt2 = $conn->prepare("INSERT INTO registration_files 
+                    (form_id, file_name, file_type, file_data) 
+                    VALUES (?, ?, ?, ?)");
+        
+                if (!$stmt2) {
+                    die("SQL Error: " . $conn->error);
+                }
+        
+                // Bind parameters for registration table
+                $stmt2->bind_param("isss", $form_id, $file_name, $file_type, $file_data);
+        
+                // Execute the query to insert registration file data
+                if ($stmt2->execute()) {
+                    //echo "registration file uploaded successfully: " . htmlspecialchars($file_name) . "<br>";
+                } else {
+                    //echo "Error uploading registration file: " . $stmt2->error . "<br>";
+                }
+                $stmt2->close();
+            }
+        }
+        
 
 
         // Call the sendEmail function after the form is processed, email_result is a boolean of success

@@ -1,6 +1,16 @@
 <?php
 // Include shared components
 include 'includes/header.php';
+
+/*
+Put Email and Phone Number to the bottom with email last
+make email not required
+
+add Have registration file 
+
+Make the bottom have alternating gray, like one and the other, maybe no border 
+
+*/
 ?>
 
 <div class="main-container">
@@ -28,16 +38,6 @@ include 'includes/header.php';
                 </div>
 
                 <div class="form-group">
-                    <label for="email">Email <span class="required">*</span></label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="phone">Phone Number <span class="optional">(Optional)</span></label>
-                    <input type="tel" id="phone" name="phone">
-                </div>
-
-                <div class="form-group">
                     <label for="vin">VIN <span class="required">*</span></label>
                     <input type="text" id="vin" name="vin" required>
                 </div>
@@ -52,6 +52,16 @@ include 'includes/header.php';
                     <input type="text" id="license-plate" name="license_plate">
                 </div>
 
+                <div class="form-group">
+                    <label for="phone">Phone Number <span class="optional">(Optional)</span></label>
+                    <input type="tel" id="phone" name="phone">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email <span class="required">*</span></label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
 
             </div>
             <!-- END OF FORM GRID -->
@@ -64,32 +74,60 @@ include 'includes/header.php';
 
 
                 <div class="form-group">
-                    <label>Are you the vehicle owner? <span class="required">*</span></label>
-                    <div class="row-flex">
-                        <div class="">
-                            <input type="radio" id="owner-yes" name="is_owner" value="yes" required>
-                            <label for="owner-yes" class="checkbox-label">Yes</label>
-                        </div>
-                        <div class="">
-                            <input type="radio" id="owner-no" name="is_owner" value="no" required>
-                            <label for="owner-no" class="checkbox-label">No</label>
+                    <div class="form-group-files">
+                        <label>Are you the vehicle owner?<span class="required">*</span></label>
+                        <div class="row-flex">
+                            <div class="">
+                                <input type="radio" id="owner-yes" name="is_owner" value="yes" required>
+                                <label for="owner-yes" class="checkbox-label">Yes</label>
+                            </div>
+                            <div class="">
+                                <input type="radio" id="owner-no" name="is_owner" value="no" required>
+                                <label for="owner-no" class="checkbox-label">No</label>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label>Is the vehicle registered in New York?<span class="required">*</span></label>
-                    <div class="row-flex">
-                        <div class="">
-                            <input type="radio" id="ny-yes" name="registered_in_ny" value="yes" required>
-                            <label for="ny-yes" class="checkbox-label">Yes</label>
-                        </div>
-                        <div class="">
-                            <input type="radio" id="ny-no" name="registered_in_ny" value="no" required>
-                            <label for="ny-no" class="checkbox-label">No</label>
+                    <div class="form-group-files">
+                        <label>Is the vehicle registered in New York?<span class="required">*</span></label>
+                        <div class="row-flex">
+                            <div class="">
+                                <input type="radio" id="ny-yes" name="registered_in_ny" value="yes" required>
+                                <label for="ny-yes" class="checkbox-label">Yes</label>
+                            </div>
+                            <div class="">
+                                <input type="radio" id="ny-no" name="registered_in_ny" value="no" required>
+                                <label for="ny-no" class="checkbox-label">No</label>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <div class="form-group-files">
+                        <label>Have Registration?<span class="required">*</span></label>
+                        <div class="row-flex">
+                            <div class="">
+                                <input type="radio" id="registration-yes" name="have_registration" value="yes" required>
+                                <label for="registration-yes" class="checkbox-label">Yes</label>
+                            </div>
+                            <div class="">
+                                <input type="radio" id="registration-no" name="have_registration" value="no" required>
+                                <label for="registration-no" class="checkbox-label">No</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hidden file upload section -->
+                    <div class="file-upload-section" id="registration-file-upload-section" style="display: none;">
+                        <label for="registration-files">Upload Registration Document:</label>
+                        <input type="file" id="registration-files" name="registration_files[]" multiple >
+                        <div class="file-list" id="registration-file-list"></div>
+                    </div>
+                </div>
+
 
 
                 <div class="form-group">
@@ -181,6 +219,62 @@ include 'includes/header.php';
 </div>
 
 <script>
+
+    // Registration File Upload Section
+    const registrationYes = document.getElementById('registration-yes');
+    const registrationNo = document.getElementById('registration-no');
+    const registrationFileUploadSection = document.getElementById('registration-file-upload-section');
+    const registrationFileInput = document.getElementById('registration-files');
+    const registrationFileList = document.getElementById('registration-file-list');
+    let registrationFiles = [];
+
+    // Add event listeners to radio buttons
+    registrationYes.addEventListener('change', function () {
+        if (registrationYes.checked) {
+            registrationFileUploadSection.style.display = 'flex'; 
+        }
+    });
+    registrationNo.addEventListener('change', function () {
+        if (registrationNo.checked) {
+            registrationFileUploadSection.style.display = 'none'; 
+        }
+    });
+
+    // Handle adding files to the list
+    registrationFileInput.addEventListener('change', function () {
+        const files = registrationFileInput.files;
+        const fileArray = Array.from(files); 
+
+        registrationFiles.push(files[0]);
+
+        fileArray.forEach(file => {
+            
+            const listItem = document.createElement('li');
+            listItem.textContent = file.name;
+
+            // Create a delete button ('X')
+            const deleteButton = document.createElement('span');
+            deleteButton.textContent = ' X';
+            deleteButton.classList.add('delete-file');
+            deleteButton.addEventListener('click', function () {
+                listItem.remove(); // Remove the file from the list
+
+                const index = registrationFiles.indexOf(file);
+                if (index > -1) {
+                    registrationFiles.splice(index, 1); // Remove the file from the array
+                }
+            });
+
+            
+            listItem.appendChild(deleteButton);
+            registrationFileList.appendChild(listItem);
+        });
+
+    });
+
+
+
+
     // Insurance File Upload Section
     const insuranceYes = document.getElementById('insurance-yes');
     const insuranceNo = document.getElementById('insurance-no');
@@ -230,10 +324,10 @@ include 'includes/header.php';
             insuranceFileList.appendChild(listItem);
         });
         // Change button label to "Add More"
-    console.log(insuranceFiles);
+            console.log(insuranceFiles);
 
-// Optionally clear the input value to allow re-uploading the same file
-insuranceFileInput.value = '';
+        // Optionally clear the input value to allow re-uploading the same file
+        insuranceFileInput.value = '';
     });
 
 
@@ -398,6 +492,14 @@ insuranceFileInput.value = '';
                 formData.append('license_files[]', file); 
             });
         } 
+
+        if (registrationFiles.length > 0) {
+            // Add registration files to FormData
+            registrationFiles.forEach(file => {
+                formData.append('registration_files[]', file); 
+            });
+        } 
+
 
 
         // Create an XMLHttpRequest or use fetch to send form data to the server
