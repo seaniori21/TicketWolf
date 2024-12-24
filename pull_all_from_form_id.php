@@ -105,7 +105,7 @@ include 'includes/header.php';
                 </div>
 
 
-                <div class='info-container' style=''>
+                <div class='info-container'>
                     <div class='subtitle-text'>Form Details</div>
                     <ul>
                         <li><strong>Form ID:</strong> <?php echo htmlspecialchars($ticket_data['form_id']); ?></li>
@@ -115,7 +115,7 @@ include 'includes/header.php';
                         <li><strong>Uploaded At:</strong> <?php echo htmlspecialchars($ticket_data['uploaded_at']); ?></li>
                     </ul>
                 </div>
-                <div class='info-container' style=''>
+                <div class='info-container' >
                     <div class='subtitle-text'>Vehicle Details</div>
                     <ul>
                         <li><strong>VIN:</strong> <?php echo htmlspecialchars($ticket_data['vin']); ?></li>
