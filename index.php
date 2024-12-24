@@ -123,7 +123,10 @@ Make the bottom have alternating gray, like one and the other, maybe no border
                     <!-- Hidden file upload section -->
                     <div class="file-upload-section" id="registration-file-upload-section" style="display: none;">
                         <label for="registration-files">Upload Registration Document:</label>
-                        <input type="file" id="registration-files" name="registration_files[]" multiple >
+                        <label>
+                            <input type="file" id="registration-files" name="registration_files[]" multiple >
+                            <span style='display: inline-block; margin: 1em;'>Empty</span>    
+                        </label>
                         <div class="file-list" id="registration-file-list"></div>
                     </div>
                 </div>
@@ -148,7 +151,10 @@ Make the bottom have alternating gray, like one and the other, maybe no border
                     <!-- Hidden file upload section -->
                     <div class="file-upload-section" id="insurance-file-upload-section" style="display: none;">
                         <label for="insurance-files">Upload Insurance Document:</label>
-                        <input type="file" id="insurance-files" name="insurance_files[]" multiple >
+                        <label>
+                            <input type="file" id="insurance-files" name="insurance_files[]" multiple >
+                            <span style='display: inline-block; margin: 1em;'>Empty</span>    
+                        </label>
                         <div class="file-list" id="insurance-file-list"></div>
                     </div>
                 </div>
@@ -172,7 +178,10 @@ Make the bottom have alternating gray, like one and the other, maybe no border
                     <!-- Hidden file upload section -->
                     <div class="file-upload-section" id="title-file-upload-section" style="display: none;">
                         <label for="title-files">Upload Title Document:</label>
-                        <input type="file" id="title-files" name="title_files[]" multiple>
+                        <label>
+                            <input type="file" id="title-files" name="title_files[]" multiple>
+                            <span style='display: inline-block; margin: 1em;'>Empty</span>    
+                        </label>
                         <div class="file-list" id="title-file-list"></div>
                     </div>
                 </div>
@@ -196,7 +205,12 @@ Make the bottom have alternating gray, like one and the other, maybe no border
                     <!-- Hidden file upload section -->
                     <div class="file-upload-section" id="license-file-upload-section" style="display: none;">
                         <label for="license-files">Upload License Document:</label>
-                        <input type="file" id="license-files" name="license_files[]" multiple>
+
+                        <label>
+                            <input type="file" id="license-files" name="license_files[]" multiple>
+                            <span style='display: inline-block; margin: 1em;'>Empty</span>    
+                        </label>
+
                         <div class="file-list" id="license-file-list"></div>
                     </div>
                 </div>
@@ -269,6 +283,7 @@ Make the bottom have alternating gray, like one and the other, maybe no border
             listItem.appendChild(deleteButton);
             registrationFileList.appendChild(listItem);
         });
+        registrationFileInput.nextElementSibling.textContent = 'Add More';
 
     });
 
@@ -323,11 +338,8 @@ Make the bottom have alternating gray, like one and the other, maybe no border
             listItem.appendChild(deleteButton);
             insuranceFileList.appendChild(listItem);
         });
-        // Change button label to "Add More"
-            console.log(insuranceFiles);
-
-        // Optionally clear the input value to allow re-uploading the same file
-        insuranceFileInput.value = '';
+        //insuranceFileInput.value = '';
+        insuranceFileInput.nextElementSibling.textContent = 'Add More';
     });
 
 
@@ -379,7 +391,7 @@ Make the bottom have alternating gray, like one and the other, maybe no border
             listItem.appendChild(deleteButton);
             titleFileList.appendChild(listItem);
         });
-
+        titleFileInput.nextElementSibling.textContent = 'Add More';
     });
 
 
@@ -432,7 +444,7 @@ Make the bottom have alternating gray, like one and the other, maybe no border
             listItem.appendChild(deleteButton);
             licenseFileList.appendChild(listItem);
         });
-
+        licenseFileInput.nextElementSibling.textContent = 'Add More';
     });
 
 
