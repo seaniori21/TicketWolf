@@ -1,5 +1,5 @@
 <?php
-include('conn_db.php');
+include('functions/conn_db.php');
 // echo "Connected successfully!<br><br>";
 
 // Get form_id from website link
@@ -85,7 +85,7 @@ $conn->close();
 
 <?php
 // Include shared components
-include '../includes/header.php';
+include 'includes/header.php';
 ?>
 
 <div class='white-container'>

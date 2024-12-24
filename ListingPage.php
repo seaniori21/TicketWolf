@@ -1,5 +1,5 @@
 <?php
-include('../functions/conn_db.php'); // Include the database connection
+include('functions/conn_db.php'); // Include the database connection
 
 // Set the number of rows per page
 $rows_per_page =10;
@@ -27,7 +27,7 @@ $conn->close();
 
 <?php
 // Include shared components
-include '../includes/header.php';
+include 'includes/header.php';
 ?>
 
 <div class='white-container'>
@@ -59,7 +59,7 @@ include '../includes/header.php';
                     <?php while ($ticket = $result->fetch_assoc()) : ?>
                         <tr>
                             <!-- onclick="window.location.href = '../functions/pull_all_from_form_id.php?form_id=<?php echo htmlspecialchars($ticket['form_id']); ?>';" -->
-                            <td> <a href="../functions/pull_all_from_form_id.php?form_id=<?php echo htmlspecialchars($ticket['form_id']); ?>">
+                            <td> <a href="pull_all_from_form_id.php?form_id=<?php echo htmlspecialchars($ticket['form_id']); ?>">
                                     View
                                 </a>
                             </td>

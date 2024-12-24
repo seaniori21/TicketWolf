@@ -1,12 +1,12 @@
 <?php
 // Include shared components
-include '../includes/header.php';
+include 'includes/header.php';
 ?>
 
 <div class="main-container">
     <div >
         <div class='header-container'>
-            <img src="../assets/img/banner_tw.png" alt="Top Right Image" class="top-right-image">
+            <img src="assets/img/banner_tw.png" alt="Top Right Image" class="top-right-image">
             <div class='ben-nino'>
                 <span style="color:#4169e1">Ben</span><span style="color:#ff6347">&</span><span style="color:#4169e1">Nino</span>
             </div>
@@ -15,7 +15,7 @@ include '../includes/header.php';
     <h1>Line Placement Form</h1>
 
     <div class="form-container">
-        <form action="../functions/ticket_form_submit.php" method="post" enctype="multipart/form-data">
+        <form action="functions/ticket_form_submit.php" method="post" enctype="multipart/form-data">
             <div class="form-grid">
                 <div class="form-group">
                     <label for="first-name">Vehicle Owner's First Name <span class="required">*</span></label>
@@ -415,7 +415,7 @@ insuranceFileInput.value = '';
             } 
             */
             if (data.status === "success") {
-               window.location.href = "../pages/ThankYou.php?ticket=" + data.ticket; // TODO
+               window.location.href = "ThankYou.php?ticket=" + data.ticket; // TODO
             }else {
                 throw new Error('Form LOL failed');
             }
