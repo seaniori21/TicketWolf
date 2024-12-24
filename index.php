@@ -89,7 +89,7 @@ Make the bottom have alternating gray, like one and the other, maybe no border
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group grey-bg">
                     <div class="form-group-files">
                         <label>Is the vehicle registered in New York?<span class="required">*</span></label>
                         <div class="row-flex">
@@ -130,7 +130,7 @@ Make the bottom have alternating gray, like one and the other, maybe no border
 
 
 
-                <div class="form-group">
+                <div class="form-group grey-bg">
                     <div class="form-group-files">
                         <label>Have Insurance?<span class="required">*</span></label>
                         <div class="row-flex">
@@ -178,7 +178,7 @@ Make the bottom have alternating gray, like one and the other, maybe no border
                 </div>
 
 
-                <div class="form-group">
+                <div class="form-group grey-bg">
                     <div class="form-group-files">
                         <label>Have Vehicle Owner's Driver's License?<span class="required">*</span></label>
                         <div class="row-flex">

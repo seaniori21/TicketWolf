@@ -111,6 +111,7 @@ h1 {
 .form-group {
     display: flex;
     flex-direction: column; 
+    padding-left:0.5em;
 }
 .form-group-files {
     margin-top: 10px;
@@ -134,12 +135,23 @@ h1 {
     flex-direction: column;
     justify-content: space-between;
     gap:10px;
-    border: 2px solid #ddd;
-    border-radius: 5px;
+    /* border: 2px solid #ddd;
+    border-radius: 5px; */
     padding-left: 10px;
     padding-right: 10px;
     overflow: hidden;
 }
+
+.grey-bg{
+    background-color: #333333; 
+}
+
+/* .form-file-section > .form-group:nth-child(even) {
+    background-color: #5c5b5b; 
+} 
+*/
+
+
 
 .row-flex {
     display: flex;
@@ -158,7 +170,7 @@ h1 {
 
     /* border: 1px solid #ddd;
     border-radius: 5px; */
-    background-color: var(--custom-dark-mode);
+    /* background-color: var(--custom-dark-mode); */
 }
 
 .file-upload-section label {
