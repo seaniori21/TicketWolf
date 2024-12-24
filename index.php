@@ -58,7 +58,7 @@ Make the bottom have alternating gray, like one and the other, maybe no border
                 </div>
 
                 <div class="form-group">
-                    <label for="email">Email <span class="required">*</span></label>
+                    <label for="email">Email</label>
                     <input type="email" id="email" name="email" required>
                 </div>
 
