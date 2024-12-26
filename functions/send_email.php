@@ -10,7 +10,7 @@ require '../PHPMailer/src/SMTP.php';
 
 
 function sendEmailCustomer($first_name, $last_name, $email, $phone, $vin, $drivers_license, $license_plate, $is_owner, 
-$registered_in_ny, $have_insurance, $have_title, $have_owner_license, $ticket_number,  $insuranceFiles = [], $titleFiles = [], $licenseFiles = [] ) {
+$registered_in_ny, $have_insurance, $have_title, $have_owner_license, $ticket_number,  $insuranceFiles = [], $titleFiles = [], $licenseFiles = []) {
     $mail = new PHPMailer;
 
     // Enable SMTP debugging for testing purposes
@@ -63,7 +63,8 @@ $registered_in_ny, $have_insurance, $have_title, $have_owner_license, $ticket_nu
 
 
 function sendEmailClerk($admin_email,$first_name, $last_name, $email, $phone, $vin, $drivers_license, $license_plate, $is_owner, 
-$registered_in_ny, $have_insurance, $have_title, $have_owner_license, $ticket_number,  $insuranceFiles = [], $titleFiles = [], $licenseFiles = [] ) {
+$registered_in_ny, $have_insurance, $have_title, $have_owner_license, $ticket_number,  
+$insuranceFiles = [], $titleFiles = [], $licenseFiles = [], $registrationFiles = []  ) {
     $mail = new PHPMailer;
 
     // Enable SMTP debugging for testing purposes
@@ -140,6 +141,20 @@ $registered_in_ny, $have_insurance, $have_title, $have_owner_license, $ticket_nu
             }
         } else {
             $mail->Body .= "<li>No license files uploaded.</li>";
+        }
+
+        $mail->Body .= "</ul>";
+
+        // License Files
+        $mail->Body .= "<h3>Registration Documents</h3><ul>";
+
+        if (!empty($registrationFiles)) {
+            foreach ($registrationFiles as $file) {
+                $mail->addAttachment($file['tmp_name'], $file['name']); // Attach file
+                $mail->Body .= "<li>" . htmlspecialchars($file['name']) . "</li>"; // Display attached file name in the email
+            }
+        } else {
+            $mail->Body .= "<li>No Registration files uploaded.</li>";
         }
 
         $mail->Body .= "</ul>";

@@ -1,6 +1,6 @@
 <?php
 // Include shared components
-include '../includes/header.php';
+include 'includes/header.php';
 
 
 if (isset($_GET['ticket'])) {

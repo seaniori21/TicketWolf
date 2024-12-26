@@ -1,5 +1,5 @@
 <?php
-include('../functions/conn_db.php'); // Include the database connection
+include('functions/conn_db.php'); // Include the database connection
 
 // Set the number of rows per page
 $rows_per_page =10;
@@ -27,16 +27,20 @@ $conn->close();
 
 <?php
 // Include shared components
-include '../includes/header.php';
+include 'includes/header.php';
 ?>
 
 <div class='white-container'>
+<div class='header-wide-container'>
+    <img src="assets/img/banner_tw.png" alt="Top Right Image" class="header-image">
+</div>
     <div class='data-container'>
     <h2>Ticket Listings</h2>
         <div class='ticket-listing-container'>
             <table class="ticket-table">
                 <thead>
                     <tr> 
+                        <th>Edit</th>
                         <th>View</th>
                         <th>ID</th>
                         <th>Ticket Today</th>
@@ -49,17 +53,22 @@ include '../includes/header.php';
                         <th>License Plate</th>
                         <th>Is Owner</th>
                         <th>Registered in NY</th>
+                        <th>Have Registration</th>
                         <th>Has Insurance</th>
                         <th>Has Title</th>
                         <th>Has Owner License</th>
-                        <th>Uploaded At</th>
+                        <th>Record Date</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php while ($ticket = $result->fetch_assoc()) : ?>
                         <tr>
                             <!-- onclick="window.location.href = '../functions/pull_all_from_form_id.php?form_id=<?php echo htmlspecialchars($ticket['form_id']); ?>';" -->
-                            <td> <a href="../functions/pull_all_from_form_id.php?form_id=<?php echo htmlspecialchars($ticket['form_id']); ?>">
+                            <td> <a href="EditForm.php?form_id=<?php echo htmlspecialchars($ticket['form_id']); ?>">
+                                    Edit
+                                </a>
+                            </td>
+                            <td> <a href="pull_all_from_form_id.php?form_id=<?php echo htmlspecialchars($ticket['form_id']); ?>">
                                     View
                                 </a>
                             </td>
@@ -74,6 +83,7 @@ include '../includes/header.php';
                             <td><?php echo htmlspecialchars($ticket['license_plate']); ?></td>
                             <td><?php echo htmlspecialchars($ticket['is_owner']); ?></td>
                             <td><?php echo htmlspecialchars($ticket['registered_in_ny']); ?></td>
+                            <td><?php echo htmlspecialchars($ticket['have_registration']); ?></td>
                             <td><?php echo htmlspecialchars($ticket['have_insurance']); ?></td>
                             <td><?php echo htmlspecialchars($ticket['have_title']); ?></td>
                             <td><?php echo htmlspecialchars($ticket['have_owner_license']); ?></td>

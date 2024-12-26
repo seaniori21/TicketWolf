@@ -44,6 +44,18 @@ body {
     padding-right: 5%;
     background-color: black;
 }
+
+.header-wide-container{
+    width:100%;
+    display: flex;
+    background-color: black;
+}
+.header-image{
+    width: 10%; /* Adjust size */
+    height: auto; /* Maintain aspect ratio */
+}
+
+
 .dark-mode *{
     background-color: var(--custom-dark-mode);
     color:white;   
@@ -97,6 +109,7 @@ body {
 }
 h1 {
     margin-bottom: 10px;
+    margin-top: 10px;
 }
 
 
@@ -105,14 +118,16 @@ h1 {
     display: grid;
     grid-template-columns: 1fr;
     row-gap: 15px;
-    padding: 20px;
+    padding: 10px;
 }
 .form-group {
     display: flex;
     flex-direction: column; 
+    padding-left:0.5em;
+    padding-right: 0.5em;
 }
 .form-group-files {
-    margin-top: 20px;
+    margin-top: 10px;
     display: flex;
     flex-direction: row;
     gap: 20px; /* Smaller gap value */
@@ -126,19 +141,30 @@ h1 {
     text-align: left; /* Optional: Centers content inside children */
 }
 .form-file-section{
-    padding-top: 2em;
-    padding-bottom: 2em;
-    margin-top: 2em;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    margin-top: 1em;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    gap:20px;
-    border: 2px solid #ddd;
-    border-radius: 5px;
+    gap:10px;
+    /* border: 2px solid #ddd;
+    border-radius: 5px; */
     padding-left: 10px;
     padding-right: 10px;
     overflow: hidden;
 }
+
+.grey-bg{
+    background-color: #333333; 
+}
+
+/* .form-file-section > .form-group:nth-child(even) {
+    background-color: #5c5b5b; 
+} 
+*/
+
+
 
 .row-flex {
     display: flex;
@@ -157,7 +183,7 @@ h1 {
 
     /* border: 1px solid #ddd;
     border-radius: 5px; */
-    background-color: var(--custom-dark-mode);
+    /* background-color: var(--custom-dark-mode); */
 }
 
 .file-upload-section label {
@@ -206,7 +232,7 @@ input[type="file"] {
 }
 .form-group input,
 .form-group select {
-    padding: 6px;
+    padding: 4px;
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 16px;
@@ -284,11 +310,11 @@ input[type="file"] {
 .ticket-table th, .ticket-table td {
     padding: 10px;
     text-align: left;
-    border: 1px solid #292929; /* Adds border between columns and rows */
+    border: 1px solid #808080; /* Adds border between columns and rows */
 }
 
 .ticket-table th {
-    background-color: #4CAF50;
+    background-color: #2f3730;
     color: white;
 }
 
@@ -333,6 +359,10 @@ input[type="file"] {
     max-width: 1200px;
     margin: 20px;
 }
+
+.ticket-details-container .file-upload-section{
+    padding:10px;
+}
 .ticket-details-container .tickets-string-details{
     display: flex;
     flex-direction: row;
@@ -343,7 +373,7 @@ input[type="file"] {
     flex:1;
     text-align: left;
     padding: 10px;
-    width: 48%;
+    width: 100%;
 }
 
 
@@ -393,9 +423,9 @@ input[type="file"] {
 
 
 button {
-    margin-top: 50px;
+    margin-top: 10px;
     padding: 10px;
-    background-color: #2f3842;
+    background-color: #43b900;
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -403,7 +433,7 @@ button {
     cursor: pointer;
 }
 button:hover {
-    background-color: #0056b3;
+    background-color: #276c00;
 }
 
 
@@ -440,7 +470,7 @@ button:hover {
     .form-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        row-gap: 80px;
+        row-gap: 10px;
         column-gap: 100px;
         padding: 20px;
     }

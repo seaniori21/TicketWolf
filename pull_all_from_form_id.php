@@ -1,5 +1,5 @@
 <?php
-include('conn_db.php');
+include('functions/conn_db.php');
 // echo "Connected successfully!<br><br>";
 
 // Get form_id from website link
@@ -30,6 +30,8 @@ if ($form_id) {
             SELECT 'title' AS file_group, title_files.* FROM title_files WHERE form_id = ?
             UNION ALL
             SELECT 'license' AS file_group, license_files.* FROM license_files WHERE form_id = ?
+            UNION ALL
+            SELECT 'registration' AS file_group, registration_files.* FROM registration_files WHERE form_id = ?
         ";
 
         // Fetch all files related to this form_id
@@ -38,7 +40,7 @@ if ($form_id) {
             die("SQL Error: " . $conn->error);
         }
 
-        $stmt2->bind_param("iii", $form_id,$form_id,$form_id);
+        $stmt2->bind_param("iiii", $form_id,$form_id,$form_id, $form_id);
         $stmt2->execute();
 
         // Fetch the result for all files
@@ -85,10 +87,13 @@ $conn->close();
 
 <?php
 // Include shared components
-include '../includes/header.php';
+include 'includes/header.php';
 ?>
 
 <div class='white-container'>
+<div class='header-wide-container'>
+    <img src="assets/img/banner_tw.png" alt="Top Right Image" class="header-image">
+</div>
     <div class='ticket-details-container'>
         
         <?php if ($ticket_data): ?>
@@ -102,26 +107,35 @@ include '../includes/header.php';
                         <li><strong>Last Name:</strong> <?php echo htmlspecialchars($ticket_data['last_name']); ?></li>
                         <li><strong>Email:</strong> <?php echo htmlspecialchars($ticket_data['email']); ?></li>
                         <li><strong>Phone:</strong> <?php echo htmlspecialchars($ticket_data['phone']); ?></li>
+                        <li><strong>Is Owner:</strong> <?php echo htmlspecialchars($ticket_data['is_owner']); ?></li>
                 </div>
 
-
-                <div class='info-container' style=''>
-                    <div class='subtitle-text'>Form Details</div>
-                    <ul>
-                        <li><strong>Form ID:</strong> <?php echo htmlspecialchars($ticket_data['form_id']); ?></li>
-                        <li><strong>Ticket Number:</strong> <?php echo htmlspecialchars($ticket_data['ticket_today']); ?></li>
-                        <li><strong>Have Insurance:</strong> <?php echo htmlspecialchars($ticket_data['have_insurance']); ?></li>
-                        <li><strong>Have Title:</strong> <?php echo htmlspecialchars($ticket_data['have_title']); ?></li>
-                        <li><strong>Uploaded At:</strong> <?php echo htmlspecialchars($ticket_data['uploaded_at']); ?></li>
-                    </ul>
-                </div>
-                <div class='info-container' style=''>
+                <div class='info-container' >
                     <div class='subtitle-text'>Vehicle Details</div>
                     <ul>
                         <li><strong>VIN:</strong> <?php echo htmlspecialchars($ticket_data['vin']); ?></li>
                         <li><strong>License Plate:</strong> <?php echo htmlspecialchars($ticket_data['license_plate']); ?></li>
                         <li><strong>Registered in NY:</strong> <?php echo htmlspecialchars($ticket_data['registered_in_ny']); ?></li>
-                        
+                    </ul>
+                </div>
+
+                <div class='info-container'>
+                    <div class='subtitle-text'>File Details</div>
+                    <ul>
+                        <li><strong>Have Registration:</strong> <?php echo htmlspecialchars($ticket_data['have_registration']); ?></li>
+                        <li><strong>Have Insurance:</strong> <?php echo htmlspecialchars($ticket_data['have_insurance']); ?></li>
+                        <li><strong>Have Title:</strong> <?php echo htmlspecialchars($ticket_data['have_title']); ?></li>
+                        <li><strong>Have license:</strong> <?php echo htmlspecialchars($ticket_data['have_owner_license']); ?></li>
+                    </ul>
+                </div>
+
+
+                <div class='info-container' style='flex:1.5'>
+                    <div class='subtitle-text'>Form Details</div>
+                    <ul>
+                        <li><strong>Form ID:</strong> <?php echo htmlspecialchars($ticket_data['form_id']); ?></li>
+                        <li><strong>Ticket Number:</strong> <?php echo htmlspecialchars($ticket_data['ticket_today']); ?></li>
+                        <li><strong>Record Date:</strong> <?php echo htmlspecialchars($ticket_data['uploaded_at']); ?></li>
                     </ul>
                 </div>
 
@@ -134,7 +148,7 @@ include '../includes/header.php';
         <?php endif; ?>
 
         <?php 
-        $file_types = ['insurance', 'title', 'license']; // List of file types
+        $file_types = ['insurance', 'title', 'license', 'registration']; // List of file types
         
         foreach ($file_types as $type): ?>
             <?php if (isset($all_files[$type]) && count($all_files[$type]) > 0): ?>
