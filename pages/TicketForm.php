@@ -1,6 +1,10 @@
 <?php
 // Include shared components
 include '../includes/header.php';
+
+
+//Make everything more compact
+//Less space and get rid of borders
 ?>
 
 <div class="main-container">
