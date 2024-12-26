@@ -1,4 +1,6 @@
 <?php
+session_start();
+if (isset($_SESSION['primary_id']) && isset($_SESSION['username'])) {
 include('functions/conn_db.php');
 // echo "Connected successfully!<br><br>";
 
@@ -78,16 +80,32 @@ if ($form_id) {
 }
 
 $conn->close();
-
-
-
-
+}else{
+    header("Location: LoginPage.php");     
+    exit();
+}
 ?>
 
 
 <?php
 // Include shared components
 include 'includes/header.php';
+?>
+
+<?php
+// Function to format phone number
+function formatPhoneNumber($phone) {
+    // Remove any non-numeric characters
+    $phone = preg_replace('/\D/', '', $phone);
+
+    // Format the phone number as (XXX) - XXX - XXXX
+    if (strlen($phone) == 10) {
+        return '(' . substr($phone, 0, 3) . ') - ' . substr($phone, 3, 3) . ' - ' . substr($phone, 6);
+    }
+
+    // If the phone number is not valid (less or more than 10 digits), return the original
+    return $phone;
+}
 ?>
 
 <div class='white-container'>
@@ -106,7 +124,7 @@ include 'includes/header.php';
                         <li><strong>First Name:</strong> <?php echo htmlspecialchars($ticket_data['first_name']); ?></li>
                         <li><strong>Last Name:</strong> <?php echo htmlspecialchars($ticket_data['last_name']); ?></li>
                         <li><strong>Email:</strong> <?php echo htmlspecialchars($ticket_data['email']); ?></li>
-                        <li><strong>Phone:</strong> <?php echo htmlspecialchars($ticket_data['phone']); ?></li>
+                        <li><strong>Phone:</strong> <?php echo formatPhoneNumber(htmlspecialchars($ticket_data['phone'])); ?></li>
                         <li><strong>Is Owner:</strong> <?php echo htmlspecialchars($ticket_data['is_owner']); ?></li>
                 </div>
 
@@ -135,7 +153,13 @@ include 'includes/header.php';
                     <ul>
                         <li><strong>Form ID:</strong> <?php echo htmlspecialchars($ticket_data['form_id']); ?></li>
                         <li><strong>Ticket Number:</strong> <?php echo htmlspecialchars($ticket_data['ticket_today']); ?></li>
-                        <li><strong>Record Date:</strong> <?php echo htmlspecialchars($ticket_data['uploaded_at']); ?></li>
+                        <li><strong>Record Date:</strong> 
+                                <?php
+                                    $date = new DateTime(htmlspecialchars($ticket_data['uploaded_at']), new DateTimeZone('UTC'));
+                                    $date->setTimezone(new DateTimeZone('America/New_York'));
+                                    echo $date->format('m/d/Y h:i A');
+                                ?>
+                        </li>
                     </ul>
                 </div>
 

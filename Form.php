@@ -46,9 +46,17 @@ include 'includes/header.php';
                     <input type="text" id="license-plate" name="license_plate">
                 </div>
 
+                <!-- <div class="form-group">
+                    <label for="phone">Phone Number <span class="optional">(Optional)</span></label>
+                    <input type="tel" id="phone" name="phone" placeholder="(XXX) XXX-XXXX" pattern="(\(\d{3}\)\s?|\d{3})(\d{3})(\d{4})"
+                    title="Please enter a valid phone number in the format (123) 123-1234 or 1231231234.">
+                </div> -->
                 <div class="form-group">
                     <label for="phone">Phone Number <span class="optional">(Optional)</span></label>
-                    <input type="tel" id="phone" name="phone">
+                    <input type="tel" id="phone" name="phone" placeholder="(___) -___-____"
+                        pattern="^\(\d{3}\)\s?-\s?\d{3}\s?-\s?\d{4}$"
+                        oninput="formatPhone(this)" maxlength="18"
+                        title="Please enter a 10 digit phone number">
                 </div>
 
                 <div class="form-group">
@@ -116,7 +124,7 @@ include 'includes/header.php';
 
                     <!-- Hidden file upload section -->
                     <div class="file-upload-section" id="registration-file-upload-section" style="display: none;">
-                        <label for="registration-files">Upload Registration Document:</label>
+                        <label for="registration-files">Take a Photo or Upload Registration Document:</label>
                         <label>
                             <input type="file" id="registration-files" name="registration_files[]" multiple >
                             <span style='display: inline-block; margin: 1em;'>Empty</span>    
@@ -144,7 +152,7 @@ include 'includes/header.php';
 
                     <!-- Hidden file upload section -->
                     <div class="file-upload-section" id="insurance-file-upload-section" style="display: none;">
-                        <label for="insurance-files">Upload Insurance Document:</label>
+                        <label for="insurance-files">Take a Photo or Upload Insurance Document:</label>
                         <label>
                             <input type="file" id="insurance-files" name="insurance_files[]" multiple >
                             <span style='display: inline-block; margin: 1em;'>Empty</span>    
@@ -171,7 +179,7 @@ include 'includes/header.php';
 
                     <!-- Hidden file upload section -->
                     <div class="file-upload-section" id="title-file-upload-section" style="display: none;">
-                        <label for="title-files">Upload Title Document:</label>
+                        <label for="title-files">Take a Photo or Upload Title Document:</label>
                         <label>
                             <input type="file" id="title-files" name="title_files[]" multiple>
                             <span style='display: inline-block; margin: 1em;'>Empty</span>    
@@ -198,7 +206,7 @@ include 'includes/header.php';
 
                     <!-- Hidden file upload section -->
                     <div class="file-upload-section" id="license-file-upload-section" style="display: none;">
-                        <label for="license-files">Upload License Document:</label>
+                        <label for="license-files">Take a Photo or Upload License Document:</label>
 
                         <label>
                             <input type="file" id="license-files" name="license_files[]" multiple>
@@ -227,6 +235,25 @@ include 'includes/header.php';
 </div>
 
 <script>
+    function formatPhone(input) {
+        let value = input.value.replace(/\D/g, '');  // Remove non-numeric characters
+        if (value.length <= 1) {
+            input.value = `${value}`;
+        }else if (value.length <= 3) {
+            input.value = `(${value}`;
+        } else if (value.length <= 6) {
+            input.value = `(${value.slice(0, 3)}) - ${value.slice(3)}`;
+        } else {
+            input.value = `(${value.slice(0, 3)}) - ${value.slice(3, 6)} - ${value.slice(6, 10)}`;
+        }
+    }
+
+    // Function to clean up the phone number on form submission
+    function cleanPhoneNumber() {
+        let phoneInput = document.getElementById('phone');
+        let cleanValue = phoneInput.value.replace(/\D/g, '');  // Remove non-numeric characters
+        phoneInput.value = cleanValue;  // Set the cleaned value (digits only)
+    }
 
     // Registration File Upload Section
     const registrationYes = document.getElementById('registration-yes');
@@ -455,6 +482,7 @@ include 'includes/header.php';
         submitButton.disabled = true;
         submitButton.style.display = 'none';
         loadingIndicator.style.display = 'block';
+        cleanPhoneNumber();
 
 
         // Prevent default form submission

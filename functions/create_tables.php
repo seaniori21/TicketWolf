@@ -22,7 +22,19 @@ $conn->select_db($dbname);
 //     echo "Error dropping table: " . $conn->error;
 // }
 
-
+$sql_create_user_table = "
+CREATE TABLE IF NOT EXISTS users (
+    primary_id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL
+);
+";
+// Execute the table creation query
+if ($conn->query($sql_create_user_table) === TRUE) {
+    echo "Table 'users' created successfully or already existed!<br>";
+} else {
+    echo "Error creating table: " . $conn->error;
+}
 
 $sql_create_tickets_table = "
 CREATE TABLE IF NOT EXISTS tickets (
@@ -50,16 +62,16 @@ if ($conn->query($sql_create_tickets_table) === TRUE) {
 }
 
 
-$sql_add_registration_column = "
-ALTER TABLE tickets
-ADD have_registration ENUM('yes', 'no') NOT NULL DEFAULT 'no';
-";
-// Execute the ALTER TABLE query
-if ($conn->query($sql_add_registration_column) === TRUE) {
-    echo "Column 'have_registration' added successfully!<br>";
-} else {
-    echo "Error adding column: " . $conn->error;
-}
+// $sql_add_registration_column = "
+// ALTER TABLE tickets
+// ADD have_registration ENUM('yes', 'no') NOT NULL DEFAULT 'no';
+// ";
+// // Execute the ALTER TABLE query
+// if ($conn->query($sql_add_registration_column) === TRUE) {
+//     echo "Column 'have_registration' added successfully!<br>";
+// } else {
+//     echo "Error adding column: " . $conn->error;
+// }
 
 
 $sql_create_insurance_files_table = "
