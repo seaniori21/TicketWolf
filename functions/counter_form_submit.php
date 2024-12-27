@@ -241,7 +241,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         }
         
-        $emailArray = ["towwolf1@gmail.com", "aaraflol42@gmail.com"];
+        $emailArray = ["towwolf1@gmail.com", "support@towwolf.com"];
 
         for ($i = 0; $i < count($emailArray); $i++) {
             // Call the sendEmail function after the form is processed, email_result is a boolean of success
