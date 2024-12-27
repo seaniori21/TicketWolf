@@ -13,11 +13,11 @@ $conn->select_db($dbname);
 // } else {
 //     echo "Error dropping table: " . $conn->error;
 // }
-// // SQL to drop the tickets table
-// $sql_drop_tickets_table = "DROP TABLE IF EXISTS tickets";
+// // SQL to drop the counter table
+// $sql_drop_counter_table = "DROP TABLE IF EXISTS counter";
 // // Execute the table drop query
-// if ($conn->query($sql_drop_tickets_table) === TRUE) {
-//     echo "Table 'tickets' dropped successfully!<br>";
+// if ($conn->query($sql_drop_counter_table) === TRUE) {
+//     echo "Table 'counter' dropped successfully!<br>";
 // } else {
 //     echo "Error dropping table: " . $conn->error;
 // }
@@ -36,8 +36,8 @@ if ($conn->query($sql_create_user_table) === TRUE) {
     echo "Error creating table: " . $conn->error;
 }
 
-$sql_create_tickets_table = "
-CREATE TABLE IF NOT EXISTS tickets (
+$sql_create_counter_table = "
+CREATE TABLE IF NOT EXISTS counter (
     form_id INT AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(255) NOT NULL,
     last_name VARCHAR(255) NOT NULL,
@@ -55,15 +55,15 @@ CREATE TABLE IF NOT EXISTS tickets (
 );
 ";
 // Execute the table creation query
-if ($conn->query($sql_create_tickets_table) === TRUE) {
-    echo "Table 'tickets' created successfully or already existed!<br>";
+if ($conn->query($sql_create_counter_table) === TRUE) {
+    echo "Table 'counter' created successfully or already existed!<br>";
 } else {
     echo "Error creating table: " . $conn->error;
 }
 
 
 // $sql_add_registration_column = "
-// ALTER TABLE tickets
+// ALTER TABLE counter
 // ADD have_registration ENUM('yes', 'no') NOT NULL DEFAULT 'no';
 // ";
 // // Execute the ALTER TABLE query
@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS insurance_files (
     file_data LONGBLOB NOT NULL, -- Store binary file data
     form_id INT NOT NULL,
     uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (form_id) REFERENCES tickets(form_id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (form_id) REFERENCES counter(form_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 ";
 // Execute the table creation query
@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS registration_files (
     file_data LONGBLOB NOT NULL, -- Store binary file data
     form_id INT NOT NULL,
     uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (form_id) REFERENCES tickets(form_id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (form_id) REFERENCES counter(form_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 ";
 // Execute the table creation query
@@ -116,7 +116,7 @@ CREATE TABLE IF NOT EXISTS title_files (
     file_data LONGBLOB NOT NULL, -- Store binary file data
     form_id INT NOT NULL,
     uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (form_id) REFERENCES tickets(form_id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (form_id) REFERENCES counter(form_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 ";
 // Execute the table creation query
@@ -135,7 +135,7 @@ CREATE TABLE IF NOT EXISTS license_files (
     file_data LONGBLOB NOT NULL, -- Store binary file data
     form_id INT NOT NULL,
     uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (form_id) REFERENCES tickets(form_id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (form_id) REFERENCES counter(form_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 ";
 // Execute the table creation query

@@ -16,7 +16,7 @@ $have_title = $_POST['have_title'];
 
 if ($form_id) {
     $stmt = $conn->prepare("
-        UPDATE tickets 
+        UPDATE counter 
         SET first_name = ?, last_name = ?, email = ?, phone = ?, vin = ?, license_plate = ?, 
             registered_in_ny = ?, have_registration = ?, have_insurance = ?, have_title = ?
         WHERE form_id = ?
@@ -31,7 +31,7 @@ if ($form_id) {
     if ($stmt->execute()) {
         echo json_encode(['status' => 'success', 'message' => 'Ticket updated successfully.']);
     } else {
-        echo json_encode(['status' => 'error', 'message' => 'Failed to update ticket.']);
+        echo json_encode(['status' => 'error', 'message' => 'Failed to update counter.']);
     }
 
     $stmt->close();
@@ -41,6 +41,6 @@ if ($form_id) {
 
 $conn->close();
 
-header('Location: ../EditForm.php?form_id=' . $form_id);
+header('Location: ../crm/editform.php?form_id=' . $form_id);
 
 ?>

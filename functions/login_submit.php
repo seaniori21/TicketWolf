@@ -3,15 +3,15 @@ session_start();
 include('conn_db.php');
 
 if (isset($_POST['username']) && isset($_POST['password'])) {
-    $username = validate($_POST['username']);
+    $username = strtolower(validate($_POST['username']));
     $password = validate($_POST['password']);
 
     if (empty($username)) {        
-        header("Location: ../LoginPage.php?error=User Name is required"); 
+        header("Location: ../crm/index.php?error=1"); 
         exit();    
     }
     else if(empty($password)){        
-        header("Location: ../LoginPage.php?error=Password is required");        
+        header("Location: ../crm/index.php?error=1");        
         exit();    
     }
     else{
@@ -25,18 +25,18 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
                 $_SESSION['name'] = $row['name'];              
                 $_SESSION['primary_id'] = $row['primary_id'];     
                 echo  "we are here "  .   $_SESSION['username']   ;
-                header("Location: ../ListingPage.php");                
+                header("Location: ../crm/listing.php");                
                 exit();            
             }    
             else{                
-                header("Location: ../LoginPage.php?error=Incorrect User name or password");                
+                header("Location: ../crm/index.php?error=3");                
                 exit();            
             }  
         }
     }
-    header("Location: ../LoginPage.php?error=Incorrect User name or password"); 
+    header("Location: ../crm/index.php?error=3"); 
 } else {
-    header("Location: ../LoginPage.php?error=Incorrect User name or password"); 
+    header("Location: ../crm/index.php?error=3"); 
     echo json_encode(['status' => 'error', 'message' => 'Invalid request method.']);
     $conn->close();
 }

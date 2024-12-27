@@ -10,7 +10,7 @@ require '../PHPMailer/src/SMTP.php';
 
 
 function sendEmailCustomer($first_name, $last_name, $email, $phone, $vin, $drivers_license, $license_plate, $is_owner, 
-$registered_in_ny, $have_insurance, $have_title, $have_owner_license, $ticket_number,  $insuranceFiles = [], $titleFiles = [], $licenseFiles = []) {
+$registered_in_ny, $have_insurance, $have_title, $have_owner_license, $counter_number,  $insuranceFiles = [], $titleFiles = [], $licenseFiles = []) {
     $mail = new PHPMailer;
 
     // Enable SMTP debugging for testing purposes
@@ -30,22 +30,21 @@ $registered_in_ny, $have_insurance, $have_title, $have_owner_license, $ticket_nu
         // Email settings
         $mail->setFrom('towwolf1@gmail.com', 'Contact Form'); // Sender email and name
         $mail->addAddress($email); // Recipient email
-        $mail->Subject = 'Your Ticket Number Is: '. $ticket_number;  // Adjust subject based on the form
+        $mail->Subject = 'Your Line Placement Number Is: '. $counter_number;  // Adjust subject based on the form
 
         // HTML email body
         $mail->isHTML(true);  // Enable HTML in the body
         $mail->Body = "
-            <p style='margin: 0; padding: 0;'>This is your response to the Ticket request form!!</p>
-            <p style='margin: 0; padding: 0;'><strong>Your Ticket Number Is:</strong> $ticket_number</p>
+            <p style='margin: 0; padding: 0;'><strong>Your Line Placement Number Is:</strong> $counter_number</p>
 
-            <p style='margin-bottom: 0; padding-bottom: 0;'>Please note the following are required documents. If any are missing, the vehicle may not be released. Please ensure you have all proper documents ready when your ticket number is called:</p>
+            <p style='margin-bottom: 0; padding-bottom: 0;'>Please note the following are required documents. If any are missing, the vehicle will not be released. Please ensure you have all proper documents ready when your Line Placement number is called:</p>
             <ol style='margin-top: 0; padding-left: 20px;'>
                 <li>Vehicle registration card</li>
                 <li>Vehicle owner's driver's license ID card</li>
                 <li>Vehicle insurance card or title document</li>
             </ol>
 
-            <p>Thank you for submitting your request. We will notify you when your ticket number is ready for processing.</p>
+            <p>Thank you for submitting your request. We will notify you when your Line Placement number is ready for processing.</p>
 
             <ul>";
 
@@ -63,7 +62,7 @@ $registered_in_ny, $have_insurance, $have_title, $have_owner_license, $ticket_nu
 
 
 function sendEmailClerk($admin_email,$first_name, $last_name, $email, $phone, $vin, $drivers_license, $license_plate, $is_owner, 
-$registered_in_ny, $have_insurance, $have_title, $have_owner_license, $ticket_number,  
+$registered_in_ny, $have_insurance, $have_title, $have_owner_license, $counter_number,  
 $insuranceFiles = [], $titleFiles = [], $licenseFiles = [], $registrationFiles = []  ) {
     $mail = new PHPMailer;
 
@@ -84,7 +83,7 @@ $insuranceFiles = [], $titleFiles = [], $licenseFiles = [], $registrationFiles =
         // Email settings
         $mail->setFrom('towwolf1@gmail.com', 'Contact Form'); // Sender email and name
         $mail->addAddress($admin_email); // Recipient email
-        $mail->Subject = 'Your Ticket Number Is: '. $ticket_number;  // Adjust subject based on the form
+        $mail->Subject = 'Your Line Number Is: '. $counter_number;  // Adjust subject based on the form
 
         // HTML email body
         $mail->isHTML(true);  // Enable HTML in the body
@@ -101,7 +100,7 @@ $insuranceFiles = [], $titleFiles = [], $licenseFiles = [], $registrationFiles =
             <p><strong>Have Insurance:</strong> $have_insurance</p>
             <p><strong>Have Title:</strong> $have_title</p>
             <p><strong>Have Owner's License:</strong> $have_owner_license</p>
-            <p><strong>Ticket Number:</strong> $ticket_number</p>
+            <p><strong>Line Number:</strong> $counter_number</p>
 
             <h3>Insurance Documents</h3>
             <ul>";

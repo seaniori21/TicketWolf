@@ -37,6 +37,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $conn->close();
 
-header('Location: ../EditForm.php?form_id=' . $form_id);
+header('Location: ../crm/editform.php?form_id=' . $form_id);
 
 ?>

@@ -1,15 +1,15 @@
 <?php
 session_start();
 if (isset($_SESSION['primary_id']) && isset($_SESSION['username'])) {
-    include('functions/conn_db.php');
+    include('../functions/conn_db.php');
     // echo "Connected successfully!<br><br>";
 
     // Get form_id from website link
     $form_id = isset($_GET['form_id']) ? $_GET['form_id'] : null;
 
     if ($form_id) {
-        // Fetch ticket data from tickets table
-        $stmt = $conn->prepare("SELECT * FROM tickets WHERE form_id = ?");
+        // Fetch counter data from counter table
+        $stmt = $conn->prepare("SELECT * FROM counter WHERE form_id = ?");
         if (!$stmt) {
             die("SQL Error: " . $conn->error);
         }
@@ -17,12 +17,12 @@ if (isset($_SESSION['primary_id']) && isset($_SESSION['username'])) {
         $stmt->bind_param("i", $form_id);
         $stmt->execute();
 
-        // Fetch the result for ticket
-        $ticket_result = $stmt->get_result();
+        // Fetch the result for counter
+        $counter_result = $stmt->get_result();
 
-        if ($ticket_result->num_rows > 0) {
+        if ($counter_result->num_rows > 0) {
             // Fetch the row as an associative array
-            $ticket_data = $ticket_result->fetch_assoc();
+            $counter_data = $counter_result->fetch_assoc();
 
 
 
@@ -81,7 +81,7 @@ if (isset($_SESSION['primary_id']) && isset($_SESSION['username'])) {
 
     $conn->close();
 }else{
-    header("Location: LoginPage.php");     
+    header("Location: index.php");     
     exit();
 }
 ?>
@@ -106,24 +106,23 @@ function formatPhoneNumber($phone) {
 
 <?php
 // Include shared components
-include 'includes/header.php';
+include '../includes/header.php';
 ?>
-
+<?php include '../includes/navbar.php'?>
 <div class='white-container'>
-<div class='header-wide-container'>
-    <img src="assets/img/banner_tw.png" alt="Top Right Image" class="header-image">
-</div>
-    <div class='ticket-details-container'>
+
+
+    <div class='counter-details-container'>
         
-    <?php if ($ticket_data): ?>
+    <?php if ($counter_data): ?>
 
 
-        <div class='title-text'>Ticket Number: <?php echo htmlspecialchars($ticket_data['ticket_today'])?> </div>
+        <div class='title-text'>Ticket Number: <?php echo htmlspecialchars($counter_data['counter_today'])?> </div>
         <div class='info-container' style='display:flex; flex-direction:row; gap:50px; padding:10px; border-bottom:1px solid grey'>
-                        <div><strong>Form ID:</strong> <?php echo htmlspecialchars($ticket_data['form_id']); ?></div>
+                        <div><strong>Form ID:</strong> <?php echo htmlspecialchars($counter_data['form_id']); ?></div>
                         <div><strong>Record Date:</strong> 
                             <?php
-                                $date = new DateTime(htmlspecialchars($ticket_data['uploaded_at']), new DateTimeZone('UTC'));
+                                $date = new DateTime(htmlspecialchars($counter_data['uploaded_at']), new DateTimeZone('UTC'));
                                 $date->setTimezone(new DateTimeZone('America/New_York'));
                                 echo $date->format('m/d/Y h:i A');
                             ?>
@@ -134,26 +133,26 @@ include 'includes/header.php';
 
 
 
+        <div class='detail-section'>
+        <form method="POST" id="detailsSectionForm" action="../functions/edit_form_id.php?form_id=<?php echo htmlspecialchars($counter_data['form_id']); ?>">
 
-        <form method="POST" id="detailsSectionForm" class='details-section' action="functions/edit_form_id.php?form_id=<?php echo htmlspecialchars($ticket_data['form_id']); ?>">
-
-            <div class='tickets-string-details'>
+            <div class='counter-string-details'>
 
                 <div class='info-container'>
                     <div class='subtitle-text'>Customer Details</div>
                     <ul>
                         <li><strong>First Name:</strong> 
-                            <input type="text" name="first_name" value="<?php echo htmlspecialchars($ticket_data['first_name']); ?>" />
+                            <input type="text" name="first_name" value="<?php echo htmlspecialchars($counter_data['first_name']); ?>" />
                         </li>
                         <li><strong>Last Name:</strong> 
-                            <input type="text" name="last_name" value="<?php echo htmlspecialchars($ticket_data['last_name']); ?>" />
+                            <input type="text" name="last_name" value="<?php echo htmlspecialchars($counter_data['last_name']); ?>" />
                         </li>
                         <li><strong>Email:</strong> 
-                            <input type="email" name="email" value="<?php echo htmlspecialchars($ticket_data['email']); ?>" />
+                            <input type="email" name="email" value="<?php echo htmlspecialchars($counter_data['email']); ?>" />
                         </li>
                         <li><strong>Phone:</strong> 
                             <input type="tel" name="phone" id="phone"
-                            value="<?php echo formatPhoneNumber(htmlspecialchars($ticket_data['phone'])); ?>" 
+                            value="<?php echo formatPhoneNumber(htmlspecialchars($counter_data['phone'])); ?>" 
                             pattern="^\(\d{3}\)\s?-\s?\d{3}\s?-\s?\d{4}$"
                             oninput="formatPhone(this)" maxlength="18"
                             title="Please enter a 10 digit phone number"/>
@@ -166,15 +165,15 @@ include 'includes/header.php';
                     <div class='subtitle-text'>Vehicle Details</div>
                     <ul>
                         <li><strong>VIN:</strong> 
-                            <input type="text" name="vin" value="<?php echo htmlspecialchars($ticket_data['vin']); ?>" />
+                            <input type="text" name="vin" value="<?php echo htmlspecialchars($counter_data['vin']); ?>" />
                         </li>
                         <li><strong>License Plate:</strong> 
-                            <input type="text" name="license_plate" value="<?php echo htmlspecialchars($ticket_data['license_plate']); ?>" />
+                            <input type="text" name="license_plate" value="<?php echo htmlspecialchars($counter_data['license_plate']); ?>" />
                         </li>
                         <li><strong>Registered in NY:</strong> 
                             <select name="registered_in_ny">
-                                <option value="yes" <?php if ($ticket_data['registered_in_ny'] == 'yes') echo 'selected'; ?>>Yes</option>
-                                <option value="no" <?php if ($ticket_data['registered_in_ny'] == 'no') echo 'selected'; ?>>No</option>
+                                <option value="yes" <?php if ($counter_data['registered_in_ny'] == 'yes') echo 'selected'; ?>>Yes</option>
+                                <option value="no" <?php if ($counter_data['registered_in_ny'] == 'no') echo 'selected'; ?>>No</option>
                             </select>
                         </li>
                     </ul>
@@ -186,26 +185,26 @@ include 'includes/header.php';
                     <ul>
                         <li><strong>Have Registration:</strong>
                             <select name="have_registration">
-                                <option value="yes" <?php if ($ticket_data['have_registration'] == 'yes') echo 'selected'; ?>>Yes</option>
-                                <option value="no" <?php if ($ticket_data['have_registration'] == 'no') echo 'selected'; ?>>No</option>
+                                <option value="yes" <?php if ($counter_data['have_registration'] == 'yes') echo 'selected'; ?>>Yes</option>
+                                <option value="no" <?php if ($counter_data['have_registration'] == 'no') echo 'selected'; ?>>No</option>
                             </select>
                         </li>
                         <li><strong>Have Insurance:</strong>
                             <select name="have_insurance">
-                                <option value="yes" <?php if ($ticket_data['have_insurance'] == 'yes') echo 'selected'; ?>>Yes</option>
-                                <option value="no" <?php if ($ticket_data['have_insurance'] == 'no') echo 'selected'; ?>>No</option>
+                                <option value="yes" <?php if ($counter_data['have_insurance'] == 'yes') echo 'selected'; ?>>Yes</option>
+                                <option value="no" <?php if ($counter_data['have_insurance'] == 'no') echo 'selected'; ?>>No</option>
                             </select>
                         </li>
                         <li><strong>Have Title:</strong>
                             <select name="have_title">
-                                <option value="yes" <?php if ($ticket_data['have_title'] == 'yes') echo 'selected'; ?>>Yes</option>
-                                <option value="no" <?php if ($ticket_data['have_title'] == 'no') echo 'selected'; ?>>No</option>
+                                <option value="yes" <?php if ($counter_data['have_title'] == 'yes') echo 'selected'; ?>>Yes</option>
+                                <option value="no" <?php if ($counter_data['have_title'] == 'no') echo 'selected'; ?>>No</option>
                             </select>
                         </li>
                         <li><strong>Have License:</strong>
                             <select name="have_owner_license">
-                                <option value="yes" <?php if ($ticket_data['have_owner_license'] == 'yes') echo 'selected'; ?>>Yes</option>
-                                <option value="no" <?php if ($ticket_data['have_owner_license'] == 'no') echo 'selected'; ?>>No</option>
+                                <option value="yes" <?php if ($counter_data['have_owner_license'] == 'yes') echo 'selected'; ?>>Yes</option>
+                                <option value="no" <?php if ($counter_data['have_owner_license'] == 'no') echo 'selected'; ?>>No</option>
                             </select>
                         </li>
                     </ul>
@@ -215,9 +214,14 @@ include 'includes/header.php';
             </div>
 
             <button type="submit" class="save-changes-btn">Save Changes</button>
+
+
         </form>
+
+        </div>
+
     <?php else: ?>
-        <p>No ticket data found for this form ID.</p>
+        <p>No counter data found for this form ID.</p>
     <?php endif; ?>
     
         <div class='file-section'>
@@ -228,7 +232,7 @@ include 'includes/header.php';
             <div class='line'></div>
                 <?php if (isset($all_files[$type]) && count($all_files[$type]) > 0): ?>
                     <h2><?php echo ucfirst($type); ?> Files</h2>
-                    <table class="ticket-table">
+                    <table class="counter-table">
                         <thead>
                             <tr>
                                 <th>File Name</th>
@@ -278,7 +282,7 @@ include 'includes/header.php';
                 <?php endif; ?>
 
 
-                <form class='edit-form-file-upload-section' method="POST" action="functions/upload_file.php" enctype="multipart/form-data">
+                <form class='edit-form-file-upload-section' method="POST" action="../functions/upload_file.php" enctype="multipart/form-data">
                     <input type="hidden" name="form_id" value="<?php echo htmlspecialchars($form_id); ?>">
                     <input type="hidden" name="file_group" value="<?php echo htmlspecialchars($type); ?>">
                     <div class=''>

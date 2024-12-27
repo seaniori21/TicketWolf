@@ -1,25 +1,29 @@
-<?php
-// Include shared components
-include 'includes/header.php';
-
-
-//Make everything more compact
-//Less space and get rid of borders
-?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <title>TowWolf - CounterWolf</title>
+    <link rel="icon" href="assets/img/favicon.png" type="logo-img">
+</head>
+<body>
 
 <div class="main-container">
-    <div >
+    <div class='form-header'>
         <div class='header-container'>
-            <img src="assets/img/banner_tw.png" alt="Top Right Image" class="top-right-image">
+            <div class="top-right-image">
+            <img src="assets/img/banner_tw.jpg" alt="Top Right Image" class='img' >
+            </div>
             <div class='ben-nino'>
                 <span style="color:#4169e1">Ben</span><span style="color:#ff6347">&</span><span style="color:#4169e1">Nino</span>
             </div>
         </div>
     </div>
-    <h1>Line Placement Form</h1>
+    <h1>Line Placement</h1>
 
     <div class="form-container">
-        <form action="functions/ticket_form_submit.php" method="post" enctype="multipart/form-data">
+        <form action="functions/counter_form_submit.php" method="post" enctype="multipart/form-data">
             <div class="form-grid">
                 <div class="form-group">
                     <label for="first-name">Vehicle Owner's First Name <span class="required">*</span></label>
@@ -547,11 +551,11 @@ include 'includes/header.php';
             /*
             data: {
                 "status": "success",
-                "ticket": 12345
+                "counter": 12345
             } 
             */
             if (data.status === "success") {
-               window.location.href = "ThankYou.php?ticket=" + data.ticket; // TODO
+               window.location.href = "confirmation.php?counter=" + data.counter; // TODO
             }else {
                 throw new Error('Form LOL failed');
             }

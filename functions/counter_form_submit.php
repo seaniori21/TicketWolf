@@ -25,23 +25,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
     // Calculate the next TicketToday value dynamically
-    $ticket_today_query = "SELECT IFNULL(MAX(ticket_today), 0) + 1 AS next_ticket_today 
-    FROM tickets 
+    $counter_today_query = "SELECT IFNULL(MAX(counter_today), 0) + 1 AS next_counter_today 
+    FROM counter 
     WHERE DATE(uploaded_at) = CURDATE()";
-    $result = $conn->query($ticket_today_query);
+    $result = $conn->query($counter_today_query);
 
     if ($result) {
         $row = $result->fetch_assoc();
-        $ticket_today = $row['next_ticket_today'];
+        $counter_today = $row['next_counter_today'];
     } else {
-        die("SQL Error calculating ticket_today: " . $conn->error);
+        die("SQL Error calculating counter_today: " . $conn->error);
     }
 
 
     // Prepare the SQL statement
-    $stmt = $conn->prepare("INSERT INTO tickets 
+    $stmt = $conn->prepare("INSERT INTO counter 
         (first_name, last_name, email, phone, vin, drivers_license, license_plate, is_owner,
-         registered_in_ny, have_insurance, have_title, have_owner_license, ticket_today) 
+         registered_in_ny, have_insurance, have_title, have_owner_license, counter_today) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     if (!$stmt) {
         die("SQL Error: " . $conn->error);
@@ -49,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Bind parameters
     $stmt->bind_param("sssssssssssss", $first_name, $last_name, $email, $phone, $vin, $drivers_license, 
-                $license_plate, $is_owner, $registered_in_ny, $have_insurance, $have_title, $have_owner_license, $ticket_today);
+                $license_plate, $is_owner, $registered_in_ny, $have_insurance, $have_title, $have_owner_license, $counter_today);
 
     
     $insuranceFiles = [];
@@ -64,7 +64,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         //Then we upload insurance files into the insurance files table
 
-        $form_id = $stmt->insert_id;  // Get the inserted form_id for the ticket
+        $form_id = $stmt->insert_id;  // Get the inserted form_id for the counter
 
         // Handle file upload if insurance files are provided
         if (isset($_FILES['insurance_files']) && !empty($_FILES['insurance_files']['name'][0])) {
@@ -246,18 +246,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         for ($i = 0; $i < count($emailArray); $i++) {
             // Call the sendEmail function after the form is processed, email_result is a boolean of success
             sendEmailClerk($emailArray[$i],$first_name, $last_name, $email, $phone, $vin, $drivers_license,
-            $license_plate, $is_owner, $registered_in_ny, $have_insurance, $have_title, $have_owner_license, $ticket_today, 
+            $license_plate, $is_owner, $registered_in_ny, $have_insurance, $have_title, $have_owner_license, $counter_today, 
             $insuranceFiles, $titleFiles, $licenseFiles,$registrationFiles);
         }
 
         sendEmailCustomer($first_name, $last_name, $email, $phone, $vin, $drivers_license,
-        $license_plate, $is_owner, $registered_in_ny, $have_insurance, $have_title, $have_owner_license, $ticket_today, 
+        $license_plate, $is_owner, $registered_in_ny, $have_insurance, $have_title, $have_owner_license, $counter_today, 
         $insuranceFiles, $titleFiles, $licenseFiles);
 
 
 
 
-        echo json_encode(['status' => 'success', 'ticket' => $ticket_today]);
+        echo json_encode(['status' => 'success', 'counter' => $counter_today]);
 
 
     } else {
