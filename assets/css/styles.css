@@ -42,7 +42,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    max-height: 700px;
+    max-height: max-content;
     max-width: 900px;
     overflow-y: hidden;
 }
@@ -121,7 +121,7 @@ body {
     align-items: center; /* Center items vertically */
     justify-content: left; /* Center items horizontally */
     width: 100%; /* Ensure it takes up full width */
-    font-size: clamp(0.5em, 4vw, 1em);
+    font-size: clamp(0.5em, 2.5vw, 1em);
     text-align: left;
 }
 .login-container .form-login{
