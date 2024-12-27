@@ -85,78 +85,88 @@ $insuranceFiles = [], $titleFiles = [], $licenseFiles = [], $registrationFiles =
         $mail->addAddress($admin_email); // Recipient email
         $mail->Subject = 'Your Line Number Is: '. $counter_number;  // Adjust subject based on the form
 
+        $insuranceFilesCount = count($insuranceFiles);
+        $titleFilesCount = count($titleFiles);
+        $licenseFilesCount = count($licenseFiles);
+        $registrationFilesCount = count($registrationFiles);
+
         // HTML email body
         $mail->isHTML(true);  // Enable HTML in the body
         $mail->Body = "
-            <p><strong>First Name:</strong> $first_name</p>
-            <p><strong>Last Name:</strong> $last_name</p>
-            <p><strong>Email:</strong> $email</p>
-            <p><strong>Phone:</strong> $phone</p>
-            <p><strong>VIN:</strong> $vin</p>
-            <p><strong>Driver's License:</strong> $drivers_license</p>
-            <p><strong>License Plate:</strong> $license_plate</p>
-            <p><strong>Is Owner:</strong> $is_owner</p>
-            <p><strong>Registered in NY:</strong> $registered_in_ny</p>
-            <p><strong>Have Insurance:</strong> $have_insurance</p>
-            <p><strong>Have Title:</strong> $have_title</p>
-            <p><strong>Have Owner's License:</strong> $have_owner_license</p>
-            <p><strong>Line Number:</strong> $counter_number</p>
+            <p><strong>First Name:</strong> $first_name<br>
+            <strong>Last Name:</strong> $last_name<br>
+            <strong>Email:</strong> $email<br>
+            <strong>Phone:</strong> $phone<br>
+            <strong>VIN:</strong> $vin<br>
+            <strong>Driver's License:</strong> $drivers_license<br>
+            <strong>License Plate:</strong> $license_plate</p>
 
-            <h3>Insurance Documents</h3>
-            <ul>";
+            <p><strong>Is Owner:</strong> $is_owner<br>
+            <strong>Registered in NY:</strong> $registered_in_ny<br>
+            <strong>Have Insurance:</strong> $have_insurance<br>
+            <strong>Have Title:</strong> $have_title<br>
+            <strong>Have Owner's License:</strong> $have_owner_license<br>
+            <strong>Line Number:</strong> $counter_number</p>
 
-        if (!empty($insuranceFiles)) {
-            foreach ($insuranceFiles as $file) {
-                $mail->addAttachment($file['tmp_name'], $file['name']); // Attach file
-                $mail->Body .= "<li>" . htmlspecialchars($file['name']) . "</li>"; // Display attached file name in the email
-            }
-        } else {
-            $mail->Body .= "<li>No insurance files uploaded.</li>";
-        }
+            <p><strong>Number of Insurance Files:</strong> $insuranceFilesCount<br>
+            <strong>Number of Title Files:</strong> $titleFilesCount<br>
+            <strong>Number of License Files:</strong> $licenseFilesCount<br>
+            <strong>Number of Registration Files:</strong> $registrationFilesCount</p>
+            ";
 
-        $mail->Body .= "</ul>";
+// <h3>Insurance Documents</h3>
+        // if (!empty($insuranceFiles)) {
+        //     foreach ($insuranceFiles as $file) {
+        //         $mail->addAttachment($file['tmp_name'], $file['name']); // Attach file
+        //         $mail->Body .= "<li>" . htmlspecialchars($file['name']) . "</li>"; // Display attached file name in the email
+        //     }
+        // } else {
+        //     $mail->Body .= "<li>No insurance files uploaded.</li>";
+        // }
 
-        // Title Files
-        $mail->Body .= "<h3>Title Documents</h3><ul>";
+        // $mail->Body .= "</ul>";
 
-        if (!empty($titleFiles)) {
-            foreach ($titleFiles as $file) {
-                $mail->addAttachment($file['tmp_name'], $file['name']); // Attach file
-                $mail->Body .= "<li>" . htmlspecialchars($file['name']) . "</li>"; // Display attached file name in the email
-            }
-        } else {
-            $mail->Body .= "<li>No title files uploaded.</li>";
-        }
+        // // Title Files
+        // $mail->Body .= "<h3>Title Documents</h3><ul>";
 
-        $mail->Body .= "</ul>";
+        // if (!empty($titleFiles)) {
+        //     foreach ($titleFiles as $file) {
+        //         $mail->addAttachment($file['tmp_name'], $file['name']); // Attach file
+        //         $mail->Body .= "<li>" . htmlspecialchars($file['name']) . "</li>"; // Display attached file name in the email
+        //     }
+        // } else {
+        //     $mail->Body .= "<li>No title files uploaded.</li>";
+        // }
 
-        // License Files
-        $mail->Body .= "<h3>License Documents</h3><ul>";
+        // $mail->Body .= "</ul>";
 
-        if (!empty($licenseFiles)) {
-            foreach ($licenseFiles as $file) {
-                $mail->addAttachment($file['tmp_name'], $file['name']); // Attach file
-                $mail->Body .= "<li>" . htmlspecialchars($file['name']) . "</li>"; // Display attached file name in the email
-            }
-        } else {
-            $mail->Body .= "<li>No license files uploaded.</li>";
-        }
+        // // License Files
+        // $mail->Body .= "<h3>License Documents</h3><ul>";
 
-        $mail->Body .= "</ul>";
+        // if (!empty($licenseFiles)) {
+        //     foreach ($licenseFiles as $file) {
+        //         $mail->addAttachment($file['tmp_name'], $file['name']); // Attach file
+        //         $mail->Body .= "<li>" . htmlspecialchars($file['name']) . "</li>"; // Display attached file name in the email
+        //     }
+        // } else {
+        //     $mail->Body .= "<li>No license files uploaded.</li>";
+        // }
 
-        // License Files
-        $mail->Body .= "<h3>Registration Documents</h3><ul>";
+        // $mail->Body .= "</ul>";
 
-        if (!empty($registrationFiles)) {
-            foreach ($registrationFiles as $file) {
-                $mail->addAttachment($file['tmp_name'], $file['name']); // Attach file
-                $mail->Body .= "<li>" . htmlspecialchars($file['name']) . "</li>"; // Display attached file name in the email
-            }
-        } else {
-            $mail->Body .= "<li>No Registration files uploaded.</li>";
-        }
+        // // License Files
+        // $mail->Body .= "<h3>Registration Documents</h3><ul>";
 
-        $mail->Body .= "</ul>";
+        // if (!empty($registrationFiles)) {
+        //     foreach ($registrationFiles as $file) {
+        //         $mail->addAttachment($file['tmp_name'], $file['name']); // Attach file
+        //         $mail->Body .= "<li>" . htmlspecialchars($file['name']) . "</li>"; // Display attached file name in the email
+        //     }
+        // } else {
+        //     $mail->Body .= "<li>No Registration files uploaded.</li>";
+        // }
+
+        // $mail->Body .= "</ul>";
 
         // Send email
         if ($mail->send()) {

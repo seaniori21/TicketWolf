@@ -501,11 +501,9 @@
             if (input.type === 'file') return; // Skip file inputs, we are handling them separately
             if (input.type === 'radio' && input.checked){
                 formData.append(input.name, input.value);
-                console.log(input.name, input.value);
             }
             if (input.type != 'radio'){
                 formData.append(input.name, input.value);
-                console.log(input.name, input.value);
             }
             
         });
@@ -547,7 +545,6 @@
         })
         .then(response => response.json())
         .then(data => {
-            // console.log("data response: ",data);
             /*
             data: {
                 "status": "success",

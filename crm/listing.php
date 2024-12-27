@@ -57,7 +57,7 @@ function formatPhoneNumber($phone) {
 <div class='white-container'>
     
     <div class='data-container'>
-    <h2>Counter Management Page</h2>
+    <h2>Line Placement Management Page</h2>
     <div class='add-border'>
         <div class='counter-listing-container' >
             <table class="counter-table">
