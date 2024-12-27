@@ -23,10 +23,11 @@ if (isset($_SESSION['primary_id']) && isset($_SESSION['username'])) {
 
             <div class='right-container'>
                 <div class='header-container'>
+                    <div style='display:flex; flex:1; padding-top:0px'></div>
                     <div class='title-text' >
                     Sign In
                     </div>
-                    <div class='ben-nino' style='flex:1; padding-top:20px'>
+                    <div class='ben-nino' style='flex:1; padding-top:0px'>
                         
                         <span style="color:#4169e1">Ben</span><span style="color:#ff6347">&</span><span style="color:#4169e1">Nino</span>
                     </div>
