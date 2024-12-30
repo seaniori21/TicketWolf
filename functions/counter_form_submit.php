@@ -22,6 +22,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $have_insurance = isset($_POST['have_insurance']) ? htmlspecialchars($_POST['have_insurance']) : null;
     $have_title = htmlspecialchars($_POST['have_title']);
     $have_owner_license = htmlspecialchars($_POST['have_owner_license']);
+    $ip_address = $_SERVER['REMOTE_ADDR'];
+    $browser_info = $_SERVER['HTTP_USER_AGENT'];
 
 
     // Calculate the next TicketToday value dynamically
@@ -41,15 +43,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Prepare the SQL statement
     $stmt = $conn->prepare("INSERT INTO counter 
         (first_name, last_name, email, phone, vin, drivers_license, license_plate, is_owner,
-         registered_in_ny, have_insurance, have_title, have_owner_license, counter_today) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+         registered_in_ny, have_insurance, have_title, have_owner_license, counter_today, ip_address, browser_info) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     if (!$stmt) {
         die("SQL Error: " . $conn->error);
     }
 
     // Bind parameters
-    $stmt->bind_param("sssssssssssss", $first_name, $last_name, $email, $phone, $vin, $drivers_license, 
-                $license_plate, $is_owner, $registered_in_ny, $have_insurance, $have_title, $have_owner_license, $counter_today);
+    $stmt->bind_param("sssssssssssssss", $first_name, $last_name, $email, $phone, $vin, $drivers_license, 
+                $license_plate, $is_owner, $registered_in_ny, $have_insurance, $have_title, $have_owner_license, $counter_today, $ip_address, $browser_info);
 
     
     $insuranceFiles = [];
@@ -241,7 +243,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         }
         
-        $emailArray = ["towwolf1@gmail.com", "support@towwolf.com"];
+        $emailArray = ["release@benandninoauto.com", "support@towwolf.com"];
 
         for ($i = 0; $i < count($emailArray); $i++) {
             // Call the sendEmail function after the form is processed, email_result is a boolean of success

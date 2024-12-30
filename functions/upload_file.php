@@ -1,6 +1,9 @@
 <?php
 include('conn_db.php');
 
+session_start();
+$user_id = isset($_SESSION['primary_id']);
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $form_id = isset($_POST['form_id']) ? $_POST['form_id'] : null;
     $file_group = isset($_POST['file_group']) ? $_POST['file_group'] : null;
@@ -18,8 +21,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $table = $file_group . "_files"; // e.g., "insurance_files", "title_files"
 
         // Insert the file data into the appropriate table
-        $stmt = $conn->prepare("INSERT INTO $table (form_id, file_name, file_type, file_data, uploaded_at) VALUES (?, ?, ?, ?, ?)");
-        $stmt->bind_param("issss", $form_id, $file_name, $file_type, $file_data, $uploaded_at);
+        $stmt = $conn->prepare("INSERT INTO $table (form_id, file_name, file_type, file_data, uploaded_at, user_id) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("issssi", $form_id, $file_name, $file_type, $file_data, $uploaded_at, $user_id);
 
         if ($stmt->execute()) {
             echo json_encode(['status' => 'success', 'message' => 'File uploaded successfully.']);

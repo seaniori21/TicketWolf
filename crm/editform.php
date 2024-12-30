@@ -8,6 +8,47 @@ if (isset($_SESSION['primary_id']) && isset($_SESSION['username'])) {
     $form_id = isset($_GET['form_id']) ? $_GET['form_id'] : null;
 
     if ($form_id) {
+        // Fetch most recent edit user from system_logs table
+        $stmt = $conn->prepare("SELECT user_id, changed_at FROM system_logs WHERE form_id = ? ORDER BY changed_at DESC LIMIT 1");
+
+        if (!$stmt) {
+            die("SQL Error: " . $conn->error);
+        }
+
+        $stmt->bind_param("i", $form_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+
+        if ($result->num_rows > 0){
+            $recent_edit = $result->fetch_assoc();
+            $recent_user_id = $recent_edit['user_id'];
+            $recent_changed_at = $recent_edit['changed_at'];
+
+            // Step 3: Use the user_id to fetch the username from the users table
+            $user_stmt = $conn->prepare("SELECT username FROM users WHERE primary_id = ?");
+            if (!$user_stmt) {
+                die("SQL Error: " . $conn->error);
+            }
+            $user_stmt->bind_param("i", $recent_user_id);
+            $user_stmt->execute();
+
+            $user_result = $user_stmt->get_result();
+            if ($user_result->num_rows > 0) {
+                $user_data = $user_result->fetch_assoc();
+                $username = $user_data['username'];
+            } else {
+                $username = "no username";
+            }
+        }else{
+            $username = "Original Source";
+            $recent_changed_at = " ";
+        }
+
+        
+
+
+
         // Fetch counter data from counter table
         $stmt = $conn->prepare("SELECT * FROM counter WHERE form_id = ?");
         if (!$stmt) {
@@ -157,6 +198,16 @@ include '../includes/header.php';
                             oninput="formatPhone(this)" maxlength="18"
                             title="Please enter a 10 digit phone number"/>
                         </li>
+                        <li style='margin-top:5px; font-size:14px; color:red;'><strong>Recent Edit By: </strong> 
+                            <div>
+                                <?php echo $username ." " ;?>
+                                <?php
+                                    $date = new DateTime(htmlspecialchars($recent_changed_at), new DateTimeZone('UTC'));
+                                    $date->setTimezone(new DateTimeZone('America/New_York'));
+                                    echo $date->format('m/d/Y h:i A');
+                                ?>
+                            </div>
+                        </li>
                     </ul>
                 </div>
 
@@ -291,6 +342,62 @@ include '../includes/header.php';
                     </div>
                     <button type="submit">Upload</button>
                 </form>
+                <!-- <form class='edit-form-file-upload-section' method="POST" action="../functions/upload_file.php" enctype="multipart/form-data">
+                    <input type="hidden" name="form_id" value="<?php echo htmlspecialchars($form_id); ?>">
+                    <input type="hidden" name="file_group" value="<?php echo htmlspecialchars($type); ?>">
+                    <input type="hidden" name="file" id="file_<?php echo $type; ?>" >
+                    
+
+                    <button type="button" id="showCameraButton">Take a Photo</button>
+
+
+                    <div id="cameraSection" style="display: none;">
+                        <video id="video" autoplay></video>
+                        <button type="button" id="capture">Capture Photo</button>
+                        <canvas id="canvas" style="display:none;"></canvas>
+                    </div>
+                    
+                    <button type="submit">Upload</button>
+                </form>
+
+<script>
+    const showCameraButton = document.getElementById('showCameraButton');
+    const cameraSection = document.getElementById('cameraSection');
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const captureButton = document.getElementById('capture');
+    const imageDataInput = document.getElementById('imageData');
+
+    // Show the camera section when the button is clicked
+    showCameraButton.addEventListener('click', () => {
+        cameraSection.style.display = 'block'; // Show the camera section
+
+        // Access the camera
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+            })
+            .catch(err => {
+                console.error('Error accessing camera: ', err);
+            });
+    });
+
+    // Capture the image
+    captureButton.addEventListener('click', () => {
+        const context = canvas.getContext('2d');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        // Convert to base64 and store in hidden input
+        const imageData = canvas.toDataURL('image/png');
+        imageDataInput.value = imageData;
+
+        console.log("Photo captured successfully!");
+        // cameraSection.style.display = 'none';
+    });
+</script> -->
+
 
                 
 

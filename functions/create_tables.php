@@ -22,6 +22,19 @@ $conn->select_db($dbname);
 //     echo "Error dropping table: " . $conn->error;
 // }
 
+$sql_alter_counter_table = "
+ALTER TABLE counter
+ADD COLUMN ip_address VARCHAR(45),
+ADD COLUMN browser_info VARCHAR(255);
+";
+
+// Execute the table creation query
+if ($conn->query($sql_alter_counter_table) === TRUE) {
+    echo "altered table<br>";
+} else {
+    echo "Error altering table: " . $conn->error;
+}
+
 $sql_create_user_table = "
 CREATE TABLE IF NOT EXISTS users (
     primary_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -32,6 +45,24 @@ CREATE TABLE IF NOT EXISTS users (
 // Execute the table creation query
 if ($conn->query($sql_create_user_table) === TRUE) {
     echo "Table 'users' created successfully or already existed!<br>";
+} else {
+    echo "Error creating table: " . $conn->error;
+}
+
+$sql_create_system_logs_table = "
+CREATE TABLE IF NOT EXISTS system_logs (
+    log_id INT AUTO_INCREMENT PRIMARY KEY,
+    form_id INT NOT NULL,
+    user_id INT NOT NULL,
+    changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    change_details TEXT NOT NULL,
+    FOREIGN KEY (form_id) REFERENCES counter(form_id),
+    FOREIGN KEY (user_id) REFERENCES users(primary_id)
+);
+";
+// Execute the table creation query
+if ($conn->query($sql_create_system_logs_table) === TRUE) {
+    echo "Table 'system_logs' created successfully or already existed!<br>";
 } else {
     echo "Error creating table: " . $conn->error;
 }

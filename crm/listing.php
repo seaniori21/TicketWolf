@@ -1,6 +1,7 @@
 <?php
 session_start();
 if (isset($_SESSION['primary_id']) && isset($_SESSION['username'])) {
+    $user_id = isset($_SESSION['primary_id']);
     include('../functions/conn_db.php'); // Include the database connection
 
     // Set the number of rows per page

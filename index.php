@@ -37,8 +37,30 @@
 
                 <div class="form-group">
                     <label for="vin">VIN <span class="required">*</span></label>
-                    <input type="text" id="vin" name="vin" required>
+                    <input type="text" id="vin" name="vin" required
+                    pattern="[A-Za-z0-9]{17}"  maxlength="17" minlength="17"
+                    title="VIN must be exactly 17 alphanumeric characters"
+                    >
                 </div>
+
+<script>
+// function VIN_Decoder() {
+//     document.getElementById('vin').addEventListener('input', function() {
+//         this.value = this.value.toUpperCase();
+//     });
+//     const vin = document.getElementById('vin').value;
+
+//     if (!vin) {
+//         alert("Please enter a VIN.");
+//         return;
+//     }
+
+//     console.log(vin);
+//     return FALSE;
+// }
+</script>
+
+
 
                 <div class="form-group">
                     <label for="drivers-license">Driver's License Number</label>
@@ -472,9 +494,19 @@
         licenseFileInput.nextElementSibling.textContent = 'Add More';
     });
 
+    
 
+    function VIN_Decoder() {
+        const vin = document.getElementById('vin').value.toUpperCase();
 
+        if (!vin) {
+            alert("Please enter a VIN.");
+            return;
+        }
 
+        console.log(vin);
+        return false;
+    }
 
     // We are creating our own type of submission
     const form = document.querySelector('form');
@@ -482,6 +514,17 @@
     const loadingIndicator = document.getElementById('loading-indicator');  // Get the button using its ID
 
     form.addEventListener('submit', function(event) {
+        event.preventDefault(); // TODO
+        
+        //When false make alert error
+        if (!VIN_Decoder()) {
+            console.warn("VIN Decoder returned true. Aborting submission.");
+            alert("Wrong VIN Number");
+            return; // Abort further execution
+        }
+
+        
+        console.log("after vin")
         // alert('In progress');
         submitButton.disabled = true;
         submitButton.style.display = 'none';
@@ -490,7 +533,6 @@
 
 
         // Prevent default form submission
-        event.preventDefault(); // TODO
 
 
         const formData = new FormData();//Has all form data
@@ -538,7 +580,7 @@
 
 
 
-        // Create an XMLHttpRequest or use fetch to send form data to the server
+        //Create an XMLHttpRequest or use fetch to send form data to the server
         fetch(form.action, {
                 method: 'POST',
                 body: formData,
