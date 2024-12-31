@@ -170,8 +170,8 @@ body {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    padding-left: 5%;
-    padding-right: 5%;
+    /* padding-left: 5%;
+    padding-right: 5%; */
     background-color: rgb(0, 0, 0);
 }
 .form-header .header-container a:link {
@@ -711,11 +711,11 @@ button {
         color:white;   
         overflow-x: hidden;
     }
-    .top-right-image {
+    /* .top-right-image {
         display: flex;
        width: 100%;
        justify-self: left;
-    }
+    } */
     .top-right-image .img{
         width: max-content;
         height: auto; /* Maintain aspect ratio */

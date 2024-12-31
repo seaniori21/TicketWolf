@@ -187,15 +187,30 @@ function formatPhoneNumber($phone) {
                     </thead>
                     <tbody>
                         <?php foreach ($all_files[$type] as $file): ?>
+                            <?php 
+                        
+                            ?>;
                             <tr>
                                 <td><?php echo htmlspecialchars($file['file_name']); ?></td>
                                 <td><?php echo htmlspecialchars($file['file_type']); ?></td>
                                 <td><?php echo htmlspecialchars($file['uploaded_at']); ?></td>
                                 <td>
                                     <?php if (isset($file['file_data'])): ?>
-                                        <img src="data:image/jpeg;base64,<?php echo $file['file_data']; ?>" alt="<?php echo ucfirst($type); ?> Image" width="100" />
+                                        <?php if (strpos($file['file_type'], 'image') !== false): ?>
+                                            <img src="data:image/jpeg;base64,<?php echo $file['file_data']; ?>" alt="<?php echo ucfirst($type); ?> Image" width="100" />
+                                        <?php elseif (strpos($file['file_type'], 'pdf') !== false): ?>
+                                            <object data="data:application/pdf;base64,<?php echo $file['file_data']; ?>" type="application/pdf" width="50%" height="auto">
+                                                <!-- <a href="data:application/pdf;base64,<?php //echo $file['file_data']; ?>">Download PDF</a> -->
+                                            </object>
+                                        <?php elseif (strpos($file['file_type'], 'msword') !== false || strpos($file['file_type'], 'word') !== false): ?>
+                                            <object data="data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64,<?php echo $file['file_data']; ?>" type="application/vnd.openxmlformats-officedocument.wordprocessingml.document" width="100%" height="600px">
+                                                <p>Sorry, your browser does not support embedded documents.</p>
+                                            </object>
+                                        <?php else: ?>
+                                            Unsupported file type
+                                        <?php endif; ?>
                                     <?php else: ?>
-                                        No image available
+                                        No file available
                                     <?php endif; ?>
                                 </td>
                                 
@@ -203,7 +218,8 @@ function formatPhoneNumber($phone) {
                                     <div class="file-actions">
                                         <?php if (isset($file['file_data'])): ?>
                                             <!-- Print Link -->
-                                            <a href="javascript:void(0);" onclick="printFile('<?php echo htmlspecialchars($file['file_data']); ?>', '<?php echo htmlspecialchars($file['file_name']); ?>')" class="file-action-link">
+                                            <a href="javascript:void(0);" onclick="printFile('<?php echo htmlspecialchars($file['file_data']); ?>',
+                                             '<?php echo htmlspecialchars($file['file_name']); ?>', '<?php echo htmlspecialchars($file['file_type']); ?>')" class="file-action-link">
                                                 Print
                                             </a>
                                             <span> / </span> <!-- Separator -->
@@ -230,19 +246,46 @@ function formatPhoneNumber($phone) {
 
 
 <script>
-function printFile(fileData, fileName) {
+// function printFile(fileData, fileName, fileType) {
+//     // Create a new window or iframe to display the content
+//     var printWindow = window.open('', '', 'width=800,height=600');
+//     printWindow.document.write('<html><head><title>Print File: ' + fileName + '</title></head><body>');
+    
+//     // Display the file based on its type (e.g., image or document)
+//     // printWindow.document.write('<h3>' + fileName + '</h3>');
+//     printWindow.document.write('<img src="data:image/jpeg;base64,' + fileData + '" alt="' + fileName + '" style="width:100%; height:auto;"/>');
+    
+//     printWindow.document.write('</body></html>');
+//     printWindow.document.close();
+
+//     // Trigger the print dialog
+//     printWindow.print();
+// }
+function printFile(fileData, fileName, fileType) {
     // Create a new window or iframe to display the content
     var printWindow = window.open('', '', 'width=800,height=600');
     printWindow.document.write('<html><head><title>Print File: ' + fileName + '</title></head><body>');
     
-    // Display the file based on its type (e.g., image or document)
-    printWindow.document.write('<h3>' + fileName + '</h3>');
-    printWindow.document.write('<img src="data:image/jpeg;base64,' + fileData + '" alt="' + fileName + '" style="width:100%; height:auto;"/>');
-    
+    // Handle different file types
+    if (fileType.includes('image')) {
+        // Display image (JPEG, PNG, etc.)
+        printWindow.document.write('<img src="data:' + fileType + ';base64,' + fileData + '" alt="' + fileName + '" style="width:100%; height:auto;"/>');
+    } else if (fileType.includes('pdf')) {
+        // Display PDF (using <iframe>)
+        printWindow.document.write('<object data="data:' + fileType + ';base64,' + fileData + '" type="application/pdf" width="100%" height="100%"></object>');
+    } else if (fileType.includes('msword') || fileType.includes('word')) {
+        // Display Word document (using <iframe> with a Google Docs viewer)
+        printWindow.document.write('<object data="data:' + fileType + ';base64,' + fileData + '" type="application/pdf" width="100%" height="100%"></object>');
+    } else {
+        printWindow.document.write('<p>File type not supported for preview.</p>');
+    }
+
     printWindow.document.write('</body></html>');
     printWindow.document.close();
 
     // Trigger the print dialog
-    printWindow.print();
+    setTimeout(function() {
+        printWindow.print();
+    }, 1000);  // 1 second delay (adjust as needed)
 }
 </script>

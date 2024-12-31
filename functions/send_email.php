@@ -75,10 +75,10 @@ $insuranceFiles = [], $titleFiles = [], $licenseFiles = [], $registrationFiles =
         $mail->isSMTP();
         $mail->SMTPSecure = 'ssl'; // SSL encryption
         $mail->SMTPAuth = true;
-        $mail->Host = 'smtp.gmail.com';
+        $mail->Host = 'smtp.hostinger.com'; 
         $mail->Port = 465; // Port for SSL
-        $mail->Username = 'towwolf1@gmail.com'; // Replace with your email
-        $mail->Password = 'ylym ugjo hzqd dhad'; // Replace with your App Password
+        $mail->Username = 'support@towwolf.com'; // Replace with your email
+        $mail->Password = 'enter_password'; // Replace with your App Password
 
         // Email settings
         $mail->setFrom('towwolf1@gmail.com', 'Contact Form'); // Sender email and name

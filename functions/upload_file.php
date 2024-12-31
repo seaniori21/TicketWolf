@@ -8,7 +8,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $form_id = isset($_POST['form_id']) ? $_POST['form_id'] : null;
     $file_group = isset($_POST['file_group']) ? $_POST['file_group'] : null;
 
-    if ($form_id && $file_group && isset($_FILES['file'])) {
+    if(!isset($_FILES['file'])){
+        echo json_encode(['status' => 'error', 'message' => 'wrong file format']);
+    }else if ($form_id && $file_group) {
         $file_name = $_FILES['file']['name'];
         $file_type = $_FILES['file']['type'];
         $file_tmp = $_FILES['file']['tmp_name'];
@@ -25,14 +27,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bind_param("issssi", $form_id, $file_name, $file_type, $file_data, $uploaded_at, $user_id);
 
         if ($stmt->execute()) {
-            echo json_encode(['status' => 'success', 'message' => 'File uploaded successfully.']);
+            echo json_encode(['status' => 'success', 'message' => 'File uploaded successfully.', 'form_id' => $form_id]);
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Failed to upload file.']);
         }
 
         $stmt->close();
     } else {
-        echo json_encode(['status' => 'error', 'message' => 'Invalid file upload.']);
+        echo json_encode(['status' => 'error', 'message' => 'Missing form_id and form_group']);
     }
 } else {
     echo json_encode(['status' => 'error', 'message' => 'Invalid request method.']);
@@ -40,6 +42,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $conn->close();
 
-header('Location: ../crm/editform.php?form_id=' . $form_id);
+//header('Location: ../crm/editform.php?form_id=' . $form_id);
 
 ?>

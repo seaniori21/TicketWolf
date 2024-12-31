@@ -12,12 +12,13 @@
 <div class="main-container">
     <div class='form-header'>
         <div class='header-container'>
-            <div class="top-right-image">
-            <img src="assets/img/banner_tw.jpg" alt="Top Right Image" class='img' >
-            </div>
             <div class='ben-nino'>
-                <span style="color:#4169e1">Ben</span><span style="color:#ff6347">&</span><span style="color:#4169e1">Nino</span>
+                    <span style="color:#4169e1">Ben</span><span style="color:#ff6347">&</span><span style="color:#4169e1">Nino</span>
             </div>
+            <div class="top-right-image">
+                <img src="assets/img/banner_tw.jpg" alt="Top Right Image" class='img' >
+            </div>
+            
         </div>
     </div>
     <h1>Line Placement</h1>
@@ -504,6 +505,10 @@
             return;
         }
 
+
+        
+
+
         console.log(vin);
         return false;
     }
@@ -516,12 +521,12 @@
     form.addEventListener('submit', function(event) {
         event.preventDefault(); // TODO
         
-        //When false make alert error
-        if (!VIN_Decoder()) {
-            console.warn("VIN Decoder returned true. Aborting submission.");
-            alert("Wrong VIN Number");
-            return; // Abort further execution
-        }
+        //When false API not recieve make alert error
+        // if (!VIN_Decoder()) {
+        //     console.warn("VIN Decoder returned true. Aborting submission.");
+        //     alert("Wrong VIN Number");
+        //     return; // Abort further execution
+        // }
 
         
         console.log("after vin")
