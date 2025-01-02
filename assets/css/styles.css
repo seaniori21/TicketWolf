@@ -79,17 +79,18 @@ body {
     text-align: left;
 }
 .top-right-image {
-    max-width: 100%;
-    height: auto; /* Maintain aspect ratio */
-}
-.top-right-image .img{
-    width: 60%;
-    height: auto; /* Maintain aspect ratio */
-}
+    width: 20%; /* Allow the container to stretch fully */
+    height: auto; /* Optionally, set height to match the container's size */
+  }
+  
+  .top-right-image .img {
+    width: 100%;
+    height: 100%;
+  }
 .ben-nino{
     font-weight: 600;
     font-family:  'Dancing Script', cursive;
-    font-size: 25px;
+    font-size: 35px;
 }
 .login-container .header-container{
     flex:1;
