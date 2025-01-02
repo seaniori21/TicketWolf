@@ -18,10 +18,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $license_plate = isset($_POST['license_plate']) ? htmlspecialchars($_POST['license_plate']) : null;
     $is_owner = htmlspecialchars($_POST['is_owner']);
     $registered_in_ny = htmlspecialchars($_POST['registered_in_ny']);
-    // $have_insurance = htmlspecialchars($_POST['have_insurance']);
     $have_insurance = isset($_POST['have_insurance']) ? htmlspecialchars($_POST['have_insurance']) : null;
     $have_title = htmlspecialchars($_POST['have_title']);
     $have_owner_license = htmlspecialchars($_POST['have_owner_license']);
+
+    //VIN
+    $manufacturer = htmlspecialchars($_POST['manufacturer']);
+    $vehicle_type = htmlspecialchars($_POST['vehicle_type']);
+    $model_year = htmlspecialchars($_POST['model_year']);
+    $make = htmlspecialchars($_POST['make']);
+    $model = htmlspecialchars($_POST['model']);
+    $body_class = htmlspecialchars($_POST['body_class']);
+
+
+
     $ip_address = $_SERVER['REMOTE_ADDR'];
     $browser_info = $_SERVER['HTTP_USER_AGENT'];
 
@@ -42,16 +52,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Prepare the SQL statement
     $stmt = $conn->prepare("INSERT INTO counter 
-        (first_name, last_name, email, phone, vin, drivers_license, license_plate, is_owner,
-         registered_in_ny, have_insurance, have_title, have_owner_license, counter_today, ip_address, browser_info) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    (first_name, last_name, email, phone, vin, drivers_license, license_plate, is_owner,
+     registered_in_ny, have_insurance, have_title, have_owner_license, counter_today, ip_address, browser_info, 
+     manufacturer, vehicle_type, model_year, make, model, body_class) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
     if (!$stmt) {
         die("SQL Error: " . $conn->error);
     }
 
     // Bind parameters
-    $stmt->bind_param("sssssssssssssss", $first_name, $last_name, $email, $phone, $vin, $drivers_license, 
-                $license_plate, $is_owner, $registered_in_ny, $have_insurance, $have_title, $have_owner_license, $counter_today, $ip_address, $browser_info);
+    $stmt->bind_param("sssssssssssssssssssss", $first_name, $last_name, $email, $phone, $vin, $drivers_license, 
+                $license_plate, $is_owner, $registered_in_ny, $have_insurance, $have_title, $have_owner_license, $counter_today, $ip_address, 
+                $browser_info, $manufacturer, $vehicle_type, $model_year, $make, $model, $body_class);
 
     
     $insuranceFiles = [];

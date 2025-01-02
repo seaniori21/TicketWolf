@@ -281,8 +281,8 @@ include '../includes/header.php';
             
             foreach ($file_types as $type): ?>
             <div class='line'></div>
+            <h2><?php echo ucfirst($type); ?> Files</h2>
                 <?php if (isset($all_files[$type]) && count($all_files[$type]) > 0): ?>
-                    <h2><?php echo ucfirst($type); ?> Files</h2>
                     <table class="counter-table">
                         <thead>
                             <tr>
@@ -323,9 +323,15 @@ include '../includes/header.php';
                                     <td>
                                         <div class="file-actions">
                                             <?php if (isset($file['file_data'])): ?>
+                                                <!-- View Link -->
+                                                <a href="javascript:void(0);" onclick="viewFile('<?php echo htmlspecialchars($file['file_data']); ?>',
+                                                    '<?php echo htmlspecialchars($file['file_name']); ?>', '<?php echo htmlspecialchars($file['file_type']);  ?>' )" class="file-action-link">
+                                                        View
+                                                </a>
+                                                <span> / </span> <!-- Separator -->
                                                 <!-- Print Link -->
                                                 <a href="javascript:void(0);" onclick="printFile('<?php echo htmlspecialchars($file['file_data']); ?>',
-                                                 '<?php echo htmlspecialchars($file['file_name']); ?>')" class="file-action-link">
+                                                 '<?php echo htmlspecialchars($file['file_name']); ?>', '<?php echo htmlspecialchars($file['file_type']);  ?>' )" class="file-action-link">
                                                     Print
                                                 </a>
                                                 <span> / </span> <!-- Separator -->
@@ -347,103 +353,115 @@ include '../includes/header.php';
                     <p>No <?php echo $type; ?> files found for this form ID.</p>
                 <?php endif; ?>
 
+                
+
+                <button type="button" class="showCameraButton" data-type="<?php echo $type; ?>">Take A Photo</button>
+                <button type="button" class="showFileSectionButton" data-type="<?php echo $type; ?>">Attach A File</button>
+
+
+                <!--  Taking A Photo Section  --> 
                 <form class="edit-form-file-upload-section" method="POST" action="../functions/upload_file.php" enctype="multipart/form-data">
                     <input type="hidden" name="form_id" value="<?php echo htmlspecialchars($form_id); ?>">
                     <input type="hidden" name="file_group" value="<?php echo htmlspecialchars($type); ?>">
                     <input type="hidden" name="file" id="file_<?php echo $type; ?>" required>
 
-                    <button type="button" class="showCameraButton" data-type="<?php echo $type; ?>">Take a Photo</button>
-
                     <div class="cameraSection" id="cameraSection_<?php echo $type; ?>" style="display: none;">
                         <video id="video_<?php echo $type; ?>" autoplay></video>
                         <button type="button" id="capture_<?php echo $type; ?>">Capture Photo</button>
                         <canvas id="canvas_<?php echo $type; ?>" style="display:none;"></canvas>
-                        
                     </div>
-                    <div class="previewSection" id="previewSection_<?php echo $type; ?>" style="display: none;">
-                            <h3>Preview:</h3>
-                            <img id="previewImage_<?php echo $type; ?>" src="" alt="Captured Image Preview" width="100%">
-                        </div>
 
-                        <button type="button" class="submitButton" data-type="<?php echo $type; ?>">Upload</button>
+                    <div class="previewSection" id="previewSection_<?php echo $type; ?>" style="display: none;">
+                        <h3>Preview:</h3>
+                        <img id="previewImage_<?php echo $type; ?>" src="" alt="Captured Image Preview" width="100%">
+                        <button type="button" class="retakePhotoButton" data-type="<?php echo $type; ?>">Retake Photo</button>
+                        <button type="button" class="submitPhotoButton" data-type="<?php echo $type; ?>" >Upload Photo</button>
+                    </div>
+
                 </form>
 
-                
-                <!-- <form class='edit-form-file-upload-section' method="POST" action="../functions/upload_file.php" enctype="multipart/form-data">
+                <!--  Uploading File Section  --> 
+                <form 
+                    class="edit-form-file-upload-section" 
+                    method="POST" 
+                    action="../functions/upload_file.php" 
+                    enctype="multipart/form-data" 
+                    style="display: none; margin-bottom:20px" 
+                    id="uploadFileSection_<?php echo $type ?>">
+                    
                     <input type="hidden" name="form_id" value="<?php echo htmlspecialchars($form_id); ?>">
                     <input type="hidden" name="file_group" value="<?php echo htmlspecialchars($type); ?>">
-                    <div class=''>
-                        <label for="file_<?php echo $type; ?>">Take a Photo or Upload a <?php echo ucfirst($type); ?> File:</label>
+                    <input type="hidden" name="upload_type" value="file">
+                    
+                    <div>
+                        <label for="file_<?php echo $type; ?>">Upload a <?php echo ucfirst($type); ?> File:</label>
                         <input type="file" name="file" id="file_<?php echo $type; ?>" required>
+                        <button type="submit">Upload</button>
                     </div>
-                    <button type="submit">Upload</button>
-                </form> -->
+                </form>
 
                 <?php endforeach; ?>
+
+            
+        </div>
+
+    </div>
+</div>
 
 
 
 <script>
-    // Convert the Base64 to a File and upload via FormData
-    document.querySelectorAll(".submitButton").forEach(button => {
-    button.addEventListener("click", function() {
-        console.log("Photo Submit button pressed");
 
-        const type = this.getAttribute("data-type");
-        const container = this.closest("form"); // Get the closest form or container for this button
-        const fileGroupInput = container.querySelector("input[name='file_group']");
-        const formIdInput = container.querySelector("input[name='form_id']");
-        const fileInput = container.querySelector("input[name='file']");
-        const imageData = fileInput.value;
+    
+    document.querySelectorAll(".showFileSectionButton").forEach(button => {
+        button.addEventListener("click",  function() {
+            const type = this.getAttribute("data-type");
 
-        if (imageData) {
-            // Convert the Base64 string to a Blob (which will be treated as a file)
-            const byteString = atob(imageData.split(',')[1]); // Decode Base64 string
-            const arrayBuffer = new ArrayBuffer(byteString.length);
-            const uint8Array = new Uint8Array(arrayBuffer);
+            const submitPhotoButton = document.querySelector(`.showCameraButton[data-type="${type}"]`);
+            submitPhotoButton.style.display = 'none';
+            const showFileSectionButton = document.querySelector(`.showFileSectionButton[data-type="${type}"]`);
+            showFileSectionButton.style.display = 'none';
 
-            for (let i = 0; i < byteString.length; i++) {
-                uint8Array[i] = byteString.charCodeAt(i);
-            }
 
-            // Create a Blob from the ArrayBuffer
-            const blob = new Blob([uint8Array], { type: "image/png" });
-
-            // Create a FormData object
-            const formData = new FormData();
-
-            // Append fields
-            formData.append("file", blob, "captured_image.png");
-            formData.append("form_id", formIdInput.value);
-            formData.append("file_group", fileGroupInput.value);
-            console.log(fileGroupInput.value);
-
-            // Now send the FormData to the server using fetch
-            fetch("../functions/upload_file.php", {
-                method: "POST",
-                body: formData
-            })
-            .then(response => response.json()) 
-            .then(data => {
-                if (data.status === "success") {
-                    window.location.href = "editform.php?form_id=" + data.form_id; // TODO
-                } else {
-                    alert("Upload failed: " + data.message);
-                }
-            })
-            .catch(error => {
-                alert("Error uploading file: " + error);
-            });
-        } else {
-            alert("No image to upload!");
-        }
+            const fileSection = document.getElementById("uploadFileSection_" + type);
+            fileSection.style.display = "flex";
+        });
     });
-});
+
+    document.querySelectorAll(".retakePhotoButton").forEach(button =>{
+        button.addEventListener("click" , function() {
+            const type = this.getAttribute("data-type");
+
+
+            //hide preview section 
+            const previewSection = document.getElementById("previewSection_" + type); 
+            const previewImage = document.getElementById("previewImage_" + type); 
+            previewImage.src = '';
+            previewSection.style.display='none';
+
+            //Clear files in camera Section
+            const container = this.closest("form"); 
+            const fileInput = container.querySelector("input[name='file']");
+            fileInput.value = '';
+            const video = document.getElementById("video_" + type);
+            
+            console.log("Retake Button Clicked");
+            //Display Camera Section
+            const showCameraButton = document.querySelector(`.showCameraButton[data-type="${type}"]`);
+            if (showCameraButton) {
+                console.log("Cam Button Clicked");
+                showCameraButton.click(); // Programmatically click the showCameraButton
+            }
+            
+        });
+    });
 
     // Dynamically handle the camera for multiple sections
     document.querySelectorAll(".showCameraButton").forEach(button => {
         button.addEventListener("click", function() {
             const type = this.getAttribute("data-type");
+
+            console.log("Show CAm Running");
             const cameraSection = document.getElementById("cameraSection_" + type);
             const video = document.getElementById("video_" + type);
             const captureButton = document.getElementById("capture_" + type);
@@ -456,6 +474,8 @@ include '../includes/header.php';
 
             cameraSection.style.display = "block"; 
             this.style.display = "none";
+            const showFileSectionButton = document.querySelector(`.showFileSectionButton[data-type="${type}"]`);
+            showFileSectionButton.style.display = 'none';
 
             // Start the camera stream
             navigator.mediaDevices.getUserMedia({ video: true })
@@ -471,16 +491,20 @@ include '../includes/header.php';
                 const context = canvas.getContext("2d");
                 context.drawImage(video, 0, 0, canvas.width, canvas.height); 
 
-                // Convert canvas image to Base64
+
                 const imageData = canvas.toDataURL("image/png");
 
-                // Set the Base64 data to the hidden file input
+
                 fileInput.value = imageData;
                 // console.log(fileInput.value)
+
 
                 const stream = video.srcObject;
                 const tracks = stream.getTracks();
                 tracks.forEach(track => track.stop()); 
+                video.srcObject = null;
+
+
                 previewSection.style.display = "block"; 
                 previewImage.src = imageData; 
 
@@ -489,50 +513,104 @@ include '../includes/header.php';
         });
     });
 
-</script>
+    // Convert the Base64 to a File and upload via FormData
+    document.querySelectorAll(".submitPhotoButton").forEach(button => {
+        button.addEventListener("click", function() {
+
+            const type = this.getAttribute("data-type");
+            const container = this.closest("form"); 
+            const fileGroupInput = container.querySelector("input[name='file_group']");
+            const formIdInput = container.querySelector("input[name='form_id']");
+            const fileInput = container.querySelector("input[name='file']");
+            const imageData = fileInput.value;
+
+            if (imageData) {
+                // Convert the Base64 string to a Blob (which will be treated as a file)
+                const byteString = atob(imageData.split(',')[1]); // Decode Base64 string
+                const arrayBuffer = new ArrayBuffer(byteString.length);
+                const uint8Array = new Uint8Array(arrayBuffer);
+
+                for (let i = 0; i < byteString.length; i++) {
+                    uint8Array[i] = byteString.charCodeAt(i);
+                }
+
+                // Create a Blob dataType
+                const blob = new Blob([uint8Array], { type: "image/png" });
+
+                // Create a FormData object
+                const formData = new FormData();
+
+                // Append fields to respective form
+                formData.append("file", blob, "captured_image.png");
+                formData.append("form_id", formIdInput.value);
+                formData.append("file_group", fileGroupInput.value);
+                console.log(fileGroupInput.value);
+
+                // Now send the FormData to the server using fetch
+                fetch("../functions/upload_file.php", {
+                    method: "POST",
+                    body: formData
+                })
+                .then(response => response.json()) 
+                .then(data => {
+                    if (data.status === "success") {
+                        window.location.href = "editform.php?form_id=" + data.form_id; // TODO
+                    } else {
+                        alert("Upload failed: " + data.message);
+                    }
+                })
+                .catch(error => {
+                    alert("Error uploading file: " + error);
+                });
+            } else {
+                alert("No image to upload!");
+            }
+        });
+    });
 
 
-
-
-
-                
-
-            
-        </div>
-
-    </div>
-</div>
-
-
-
-<script>
     function printFile(fileData, fileName, fileType) {
-    // Create a new window or iframe to display the content
-    var printWindow = window.open('', '', 'width=800,height=600');
-    printWindow.document.write('<html><head><title>Print File: ' + fileName + '</title></head><body>');
-    
-    // Handle different file types
-    if (fileType.includes('image')) {
-        // Display image (JPEG, PNG, etc.)
-        printWindow.document.write('<img src="data:' + fileType + ';base64,' + fileData + '" alt="' + fileName + '" style="width:100%; height:auto;"/>');
-    } else if (fileType.includes('pdf')) {
-        // Display PDF (using <iframe>)
-        printWindow.document.write('<object data="data:' + fileType + ';base64,' + fileData + '" type="application/pdf" width="100%" height="100%"></object>');
-    } else if (fileType.includes('msword') || fileType.includes('word')) {
-        // Display Word document (using <iframe> with a Google Docs viewer)
-        printWindow.document.write('<object data="data:' + fileType + ';base64,' + fileData + '" type="application/pdf" width="100%" height="100%"></object>');
-    } else {
-        printWindow.document.write('<p>File type not supported for preview.</p>');
+        // New window to disply print tab
+        var printWindow = window.open('', '', 'width=800,height=600');
+        printWindow.document.write('<html><head><title>Print File: ' + fileName + '</title></head><body>');
+        
+        // Handle different file types
+        if (fileType.includes('image')) {
+            printWindow.document.write('<img src="data:' + fileType + ';base64,' + fileData + '" alt="' + fileName + '" style="width:100%; height:auto;"/>');
+        } else if (fileType.includes('pdf')) {
+            printWindow.document.write('<object data="data:' + fileType + ';base64,' + fileData + '" type="application/pdf" width="100%" height="100%"></object>');
+        } else if (fileType.includes('msword') || fileType.includes('word')) {
+            printWindow.document.write('<object data="data:' + fileType + ';base64,' + fileData + '" type="application/pdf" width="100%" height="100%"></object>');
+        } else {
+            printWindow.document.write('<p>File type not supported for preview.</p>');
+        }
+
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+
+        // Delay print to allow time for file to convert for preview
+        setTimeout(function() {
+            printWindow.print();
+        }, 1000);  
     }
+    function viewFile(fileData, fileName, fileType) {
+        // New window to disply print tab
+        var printWindow = window.open('', '', 'width=800,height=600');
+        printWindow.document.write('<html><head><title>Print File: ' + fileName + '</title></head><body>');
+        
+        // Handle different file types
+        if (fileType.includes('image')) {
+            printWindow.document.write('<img src="data:' + fileType + ';base64,' + fileData + '" alt="' + fileName + '" style="width:100%; height:auto;"/>');
+        } else if (fileType.includes('pdf')) {
+            printWindow.document.write('<object data="data:' + fileType + ';base64,' + fileData + '" type="application/pdf" width="100%" height="100%"></object>');
+        } else if (fileType.includes('msword') || fileType.includes('word')) {
+            printWindow.document.write('<object data="data:' + fileType + ';base64,' + fileData + '" type="application/pdf" width="100%" height="100%"></object>');
+        } else {
+            printWindow.document.write('<p>File type not supported for preview.</p>');
+        }
 
-    printWindow.document.write('</body></html>');
-    printWindow.document.close();
-
-    // Trigger the print dialog
-    setTimeout(function() {
-        printWindow.print();
-    }, 1000);  // 1 second delay (adjust as needed)
-}
+        printWindow.document.write('</body></html>');
+    }
 
 
 
@@ -553,7 +631,7 @@ include '../includes/header.php';
     function cleanPhoneNumber() {
         let phoneInput = document.getElementById('phone');
         let cleanValue = phoneInput.value.replace(/\D/g, '');  // Remove non-numeric characters
-        phoneInput.value = cleanValue;  // Set the cleaned value (digits only)
+        phoneInput.value = cleanValue;  
     }
 
 

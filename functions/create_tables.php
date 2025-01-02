@@ -24,8 +24,12 @@ $conn->select_db($dbname);
 
 $sql_alter_counter_table = "
 ALTER TABLE counter
-ADD COLUMN ip_address VARCHAR(45),
-ADD COLUMN browser_info VARCHAR(255);
+ADD COLUMN manufacturer VARCHAR(255),
+ADD COLUMN vehicle_type VARCHAR(255),
+ADD COLUMN model_year INT,
+ADD COLUMN make VARCHAR(255),
+ADD COLUMN model VARCHAR(255),
+ADD COLUMN body_class VARCHAR(255);
 ";
 
 // Execute the table creation query

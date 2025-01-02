@@ -7,6 +7,7 @@ $user_id = isset($_SESSION['primary_id']);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $form_id = isset($_POST['form_id']) ? $_POST['form_id'] : null;
     $file_group = isset($_POST['file_group']) ? $_POST['file_group'] : null;
+    $upload_type = isset($_POST['upload_type']) ? $_POST['upload_type'] : null;
 
     if(!isset($_FILES['file'])){
         echo json_encode(['status' => 'error', 'message' => 'wrong file format']);
@@ -27,6 +28,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bind_param("issssi", $form_id, $file_name, $file_type, $file_data, $uploaded_at, $user_id);
 
         if ($stmt->execute()) {
+            if($upload_type === "file"){
+                $stmt->close();
+                header('Location: ../crm/editform.php?form_id=' . $form_id);
+                exit();
+            }
             echo json_encode(['status' => 'success', 'message' => 'File uploaded successfully.', 'form_id' => $form_id]);
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Failed to upload file.']);
@@ -42,6 +48,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $conn->close();
 
-//header('Location: ../crm/editform.php?form_id=' . $form_id);
+
 
 ?>

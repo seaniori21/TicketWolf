@@ -169,12 +169,13 @@ function formatPhoneNumber($phone) {
             <p>No counter data found for this form ID.</p>
         <?php endif; ?>
 
+
         <?php 
         $file_types = ['insurance', 'title', 'license', 'registration']; // List of file types
-        
         foreach ($file_types as $type): ?>
+            <div class='line' style='margin-top:5%;'></div>
+            <h2><?php echo ucfirst($type); ?> Files</h2>
             <?php if (isset($all_files[$type]) && count($all_files[$type]) > 0): ?>
-                <h2><?php echo ucfirst($type); ?> Files</h2>
                 <table class="counter-table">
                     <thead>
                         <tr>
@@ -187,9 +188,6 @@ function formatPhoneNumber($phone) {
                     </thead>
                     <tbody>
                         <?php foreach ($all_files[$type] as $file): ?>
-                            <?php 
-                        
-                            ?>;
                             <tr>
                                 <td><?php echo htmlspecialchars($file['file_name']); ?></td>
                                 <td><?php echo htmlspecialchars($file['file_type']); ?></td>
@@ -217,10 +215,16 @@ function formatPhoneNumber($phone) {
                                 <td>
                                     <div class="file-actions">
                                         <?php if (isset($file['file_data'])): ?>
+                                            <!-- View Link -->
+                                            <a href="javascript:void(0);" onclick="viewFile('<?php echo htmlspecialchars($file['file_data']); ?>',
+                                                 '<?php echo htmlspecialchars($file['file_name']); ?>', '<?php echo htmlspecialchars($file['file_type']);  ?>' )" class="file-action-link">
+                                                    View
+                                            </a>
+                                            <span> / </span> <!-- Separator -->
                                             <!-- Print Link -->
                                             <a href="javascript:void(0);" onclick="printFile('<?php echo htmlspecialchars($file['file_data']); ?>',
-                                             '<?php echo htmlspecialchars($file['file_name']); ?>', '<?php echo htmlspecialchars($file['file_type']); ?>')" class="file-action-link">
-                                                Print
+                                                 '<?php echo htmlspecialchars($file['file_name']); ?>', '<?php echo htmlspecialchars($file['file_type']);  ?>' )" class="file-action-link">
+                                                    Print
                                             </a>
                                             <span> / </span> <!-- Separator -->
                                             <!-- Download Link -->
@@ -246,46 +250,47 @@ function formatPhoneNumber($phone) {
 
 
 <script>
-// function printFile(fileData, fileName, fileType) {
-//     // Create a new window or iframe to display the content
-//     var printWindow = window.open('', '', 'width=800,height=600');
-//     printWindow.document.write('<html><head><title>Print File: ' + fileName + '</title></head><body>');
-    
-//     // Display the file based on its type (e.g., image or document)
-//     // printWindow.document.write('<h3>' + fileName + '</h3>');
-//     printWindow.document.write('<img src="data:image/jpeg;base64,' + fileData + '" alt="' + fileName + '" style="width:100%; height:auto;"/>');
-    
-//     printWindow.document.write('</body></html>');
-//     printWindow.document.close();
+    function viewFile(fileData, fileName, fileType) {
+        // New window to disply print tab
+        var printWindow = window.open('', '', 'width=800,height=600');
+        printWindow.document.write('<html><head><title>Print File: ' + fileName + '</title></head><body>');
+        
+        // Handle different file types
+        if (fileType.includes('image')) {
+            printWindow.document.write('<img src="data:' + fileType + ';base64,' + fileData + '" alt="' + fileName + '" style="width:100%; height:auto;"/>');
+        } else if (fileType.includes('pdf')) {
+            printWindow.document.write('<object data="data:' + fileType + ';base64,' + fileData + '" type="application/pdf" width="100%" height="100%"></object>');
+        } else if (fileType.includes('msword') || fileType.includes('word')) {
+            printWindow.document.write('<object data="data:' + fileType + ';base64,' + fileData + '" type="application/pdf" width="100%" height="100%"></object>');
+        } else {
+            printWindow.document.write('<p>File type not supported for preview.</p>');
+        }
 
-//     // Trigger the print dialog
-//     printWindow.print();
-// }
-function printFile(fileData, fileName, fileType) {
-    // Create a new window or iframe to display the content
-    var printWindow = window.open('', '', 'width=800,height=600');
-    printWindow.document.write('<html><head><title>Print File: ' + fileName + '</title></head><body>');
-    
-    // Handle different file types
-    if (fileType.includes('image')) {
-        // Display image (JPEG, PNG, etc.)
-        printWindow.document.write('<img src="data:' + fileType + ';base64,' + fileData + '" alt="' + fileName + '" style="width:100%; height:auto;"/>');
-    } else if (fileType.includes('pdf')) {
-        // Display PDF (using <iframe>)
-        printWindow.document.write('<object data="data:' + fileType + ';base64,' + fileData + '" type="application/pdf" width="100%" height="100%"></object>');
-    } else if (fileType.includes('msword') || fileType.includes('word')) {
-        // Display Word document (using <iframe> with a Google Docs viewer)
-        printWindow.document.write('<object data="data:' + fileType + ';base64,' + fileData + '" type="application/pdf" width="100%" height="100%"></object>');
-    } else {
-        printWindow.document.write('<p>File type not supported for preview.</p>');
+        printWindow.document.write('</body></html>');
     }
 
-    printWindow.document.write('</body></html>');
-    printWindow.document.close();
+    function printFile(fileData, fileName, fileType) {
+        // New window to disply print tab
+        var printWindow = window.open('', '', 'width=800,height=600');
+        printWindow.document.write('<html><head><title>Print File: ' + fileName + '</title></head><body>');
+        
+        // Handle different file types
+        if (fileType.includes('image')) {
+            printWindow.document.write('<img src="data:' + fileType + ';base64,' + fileData + '" alt="' + fileName + '" style="width:100%; height:auto;"/>');
+        } else if (fileType.includes('pdf')) {
+            printWindow.document.write('<object data="data:' + fileType + ';base64,' + fileData + '" type="application/pdf" width="100%" height="100%"></object>');
+        } else if (fileType.includes('msword') || fileType.includes('word')) {
+            printWindow.document.write('<object data="data:' + fileType + ';base64,' + fileData + '" type="application/pdf" width="100%" height="100%"></object>');
+        } else {
+            printWindow.document.write('<p>File type not supported for preview.</p>');
+        }
 
-    // Trigger the print dialog
-    setTimeout(function() {
-        printWindow.print();
-    }, 1000);  // 1 second delay (adjust as needed)
-}
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+
+        // Delay print to allow time for file to convert for preview
+        setTimeout(function() {
+            printWindow.print();
+        }, 1000);  
+    }
 </script>

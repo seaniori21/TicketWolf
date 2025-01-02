@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="assets/css/styles.css">
     <title>TowWolf - CounterWolf</title>
     <link rel="icon" href="assets/img/favicon.png" type="logo-img">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 
@@ -36,32 +37,13 @@
                     <input type="text" id="last-name" name="last_name" required>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" id="vin-group">
                     <label for="vin">VIN <span class="required">*</span></label>
                     <input type="text" id="vin" name="vin" required
                     pattern="[A-Za-z0-9]{17}"  maxlength="17" minlength="17"
                     title="VIN must be exactly 17 alphanumeric characters"
                     >
                 </div>
-
-<script>
-// function VIN_Decoder() {
-//     document.getElementById('vin').addEventListener('input', function() {
-//         this.value = this.value.toUpperCase();
-//     });
-//     const vin = document.getElementById('vin').value;
-
-//     if (!vin) {
-//         alert("Please enter a VIN.");
-//         return;
-//     }
-
-//     console.log(vin);
-//     return FALSE;
-// }
-</script>
-
-
 
                 <div class="form-group">
                     <label for="drivers-license">Driver's License Number</label>
@@ -70,14 +52,12 @@
 
                 <div class="form-group">
                     <label for="license-plate">License Plate Number</label>
-                    <input type="text" id="license-plate" name="license_plate">
+                    <input type="text" id="license-plate" name="license_plate"
+                    pattern="[A-Za-z0-9]{6}"  maxlength="6" minlength="6"
+                    title="License Plate Number must be exactly 6 alphanumeric characters"
+                    >
                 </div>
 
-                <!-- <div class="form-group">
-                    <label for="phone">Phone Number <span class="optional">(Optional)</span></label>
-                    <input type="tel" id="phone" name="phone" placeholder="(XXX) XXX-XXXX" pattern="(\(\d{3}\)\s?|\d{3})(\d{3})(\d{4})"
-                    title="Please enter a valid phone number in the format (123) 123-1234 or 1231231234.">
-                </div> -->
                 <div class="form-group">
                     <label for="phone">Phone Number <span class="optional">(Optional)</span></label>
                     <input type="tel" id="phone" name="phone" placeholder="(___) -___-____"
@@ -148,13 +128,15 @@
                             </div>
                         </div>
                     </div>
-
                     <!-- Hidden file upload section -->
                     <div class="file-upload-section" id="registration-file-upload-section" style="display: none;">
-                        <label for="registration-files">Take a Photo or Upload Registration Document:</label>
+                        <!-- <label for="registration-files">Take a Photo or Upload Registration Document:</label> -->
                         <label>
-                            <input type="file" id="registration-files" name="registration_files[]" multiple >
-                            <span style='display: inline-block; margin: 1em;'>Empty</span>    
+                            <input type="file" id="registration-files" name="registration_files[]" multiple style='display: none;'>
+                            <span style='display: inline-block; margin: 1em;
+                                padding: 0.5em 1em; 
+                                background-color: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer;
+                            '>Take Photo or Upload Document</span>     
                         </label>
                         <div class="file-list" id="registration-file-list"></div>
                     </div>
@@ -176,13 +158,15 @@
                             </div>
                         </div>
                     </div>
-
                     <!-- Hidden file upload section -->
                     <div class="file-upload-section" id="insurance-file-upload-section" style="display: none;">
-                        <label for="insurance-files">Take a Photo or Upload Insurance Document:</label>
+                        <!-- <label for="insurance-files">Take a Photo or Upload Insurance Document:</label> -->
                         <label>
-                            <input type="file" id="insurance-files" name="insurance_files[]" multiple >
-                            <span style='display: inline-block; margin: 1em;'>Empty</span>    
+                            <input type="file" id="insurance-files" name="insurance_files[]" multiple style='display: none;'>
+                            <span style='display: inline-block; margin: 1em;
+                                padding: 0.5em 1em; 
+                                background-color: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer;
+                            '>Take Photo or Upload Document</span>    
                         </label>
                         <div class="file-list" id="insurance-file-list"></div>
                     </div>
@@ -206,10 +190,13 @@
 
                     <!-- Hidden file upload section -->
                     <div class="file-upload-section" id="title-file-upload-section" style="display: none;">
-                        <label for="title-files">Take a Photo or Upload Title Document:</label>
+                        <!-- <label for="title-files">Take a Photo or Upload Title Document:</label> -->
                         <label>
-                            <input type="file" id="title-files" name="title_files[]" multiple>
-                            <span style='display: inline-block; margin: 1em;'>Empty</span>    
+                            <input type="file" id="title-files" name="title_files[]" multiple style='display: none;'>
+                            <span style='display: inline-block; margin: 1em;
+                                padding: 0.5em 1em; 
+                                background-color: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer;
+                            '>Take Photo or Upload Document</span>   
                         </label>
                         <div class="file-list" id="title-file-list"></div>
                     </div>
@@ -233,11 +220,14 @@
 
                     <!-- Hidden file upload section -->
                     <div class="file-upload-section" id="license-file-upload-section" style="display: none;">
-                        <label for="license-files">Take a Photo or Upload License Document:</label>
+                        <!-- <label for="license-files">Take a Photo or Upload License Document:</label> -->
 
                         <label>
-                            <input type="file" id="license-files" name="license_files[]" multiple>
-                            <span style='display: inline-block; margin: 1em;'>Empty</span>    
+                            <input type="file" id="license-files" name="license_files[]" multiple style='display: none;'>
+                            <span style='display: inline-block; margin: 1em;
+                                padding: 0.5em 1em; 
+                                background-color: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer;
+                            '>Take Photo or Upload Document</span>  
                         </label>
 
                         <div class="file-list" id="license-file-list"></div>
@@ -252,6 +242,10 @@
 
             <div id="loading-indicator" style="display: none;">
                 <p>Submitting your form... <span class="spinner">🔄</span></p>
+            </div>
+            <div id="vin-error" class="error" style="display: none;">
+                The VIN entered is not a valid VIN Number.<br>
+                Please Correct
             </div>
             <div class="form-group full-width">
                 <button type="submit" id="submit-btn">Submit</button>
@@ -331,7 +325,7 @@
             listItem.appendChild(deleteButton);
             registrationFileList.appendChild(listItem);
         });
-        registrationFileInput.nextElementSibling.textContent = 'Add More';
+        registrationFileInput.nextElementSibling.textContent = 'Add Another Photo or Upload Document';
 
     });
 
@@ -354,7 +348,7 @@
 
     insuranceNo.addEventListener('change', function () {
         if (insuranceNo.checked) {
-            insuranceFileUploadSection.style.display = 'none';
+            insuranceFileUploadSection.style.display = 'none'; ;
         }
     });
 
@@ -387,7 +381,7 @@
             insuranceFileList.appendChild(listItem);
         });
         //insuranceFileInput.value = '';
-        insuranceFileInput.nextElementSibling.textContent = 'Add More';
+        insuranceFileInput.nextElementSibling.textContent = 'Add Another Photo or Upload Document';
     });
 
 
@@ -439,7 +433,7 @@
             listItem.appendChild(deleteButton);
             titleFileList.appendChild(listItem);
         });
-        titleFileInput.nextElementSibling.textContent = 'Add More';
+        titleFileInput.nextElementSibling.textContent = 'Add Another Photo or Upload Document';
     });
 
 
@@ -492,44 +486,59 @@
             listItem.appendChild(deleteButton);
             licenseFileList.appendChild(listItem);
         });
-        licenseFileInput.nextElementSibling.textContent = 'Add More';
+        licenseFileInput.nextElementSibling.textContent = 'Add Another Photo or Upload Document';
     });
 
     
-
-    function VIN_Decoder() {
+    // let vinData;
+    async function VIN_Decoder() {
         const vin = document.getElementById('vin').value.toUpperCase();
 
         if (!vin) {
             alert("Please enter a VIN.");
-            return;
+            return null;
         }
-
-
+        const result = await new Promise((resolve, reject) => {
+            $.ajax({
+                url: `https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVINValues/${vin}?format=json`,
+                type: "GET",
+                dataType: "json",
+                success: function(result) {
+                    resolve(result);  // Resolve the promise with the result
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    resolve("error");
+                }
+            });
+        });
+        // console.log(vin);
+        if(result.Results[0]["ErrorCode"] != "0" ){
+            return "error"
+        }else{
+            return result.Results[0];
+        }
         
-
-
-        console.log(vin);
-        return false;
     }
-
     // We are creating our own type of submission
     const form = document.querySelector('form');
     const submitButton = document.getElementById('submit-btn');  // Get the button using its ID
     const loadingIndicator = document.getElementById('loading-indicator');  // Get the button using its ID
+    const vinErrorWarning = document.getElementById('vin-error');
+    const vinGroup = document.getElementById('vin');
 
-    form.addEventListener('submit', function(event) {
+    form.addEventListener('submit', async function(event) {
         event.preventDefault(); // TODO
-        
-        //When false API not recieve make alert error
-        // if (!VIN_Decoder()) {
-        //     console.warn("VIN Decoder returned true. Aborting submission.");
-        //     alert("Wrong VIN Number");
-        //     return; // Abort further execution
-        // }
+        const vinData = await VIN_Decoder();
+        vinErrorWarning.style.display='none';
 
-        
-        console.log("after vin")
+        if (!vinData || vinData === "error") {
+           
+            alert("Wrong VIN Number.\nThe VIN entered is not a valid VIN Number.\nPlease Correct");
+            vinErrorWarning.style.display='block';
+            vinGroup.style.border = "3px solid red";
+            return; 
+        }
+    
         // alert('In progress');
         submitButton.disabled = true;
         submitButton.style.display = 'none';
@@ -537,10 +546,18 @@
         cleanPhoneNumber();
 
 
-        // Prevent default form submission
-
 
         const formData = new FormData();//Has all form data
+
+        const vinFields = ["Manufacturer", "VehicleType", "ModelYear", "Make", "Model", "BodyClass"];
+        const sqlFields = ["manufacturer", "vehicle_type", "model_year", "make", "model", "body_class"];
+
+
+        for(let i=0; i<vinFields.length; i++){
+            formData.append(sqlFields[i], vinData[vinFields[i]]);
+        }
+
+
 
         // Add other form fields to the formData
         const formElements = form.querySelectorAll('input, select, textarea');
@@ -599,7 +616,7 @@
             } 
             */
             if (data.status === "success") {
-               window.location.href = "confirmation.php?counter=" + data.counter; // TODO
+                window.location.href = "confirmation.php?counter=" + data.counter; // TODO
             }else {
                 throw new Error('Form LOL failed');
             }
