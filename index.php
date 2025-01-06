@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <link rel="stylesheet" href="assets/css/styles.css">
     <title>TowWolf - CounterWolf</title>
     <link rel="icon" href="assets/img/favicon.png" type="logo-img">
@@ -233,8 +236,39 @@
                         <div class="file-list" id="license-file-list"></div>
                     </div>
                 </div>
+                
+                <div class="form-group">
+                    <div class="form-group-files">
+                        <label>Have Additional Files?<span class="required">*</span></label>
+                        <div class="row-flex">
+                            <div class="">
+                                <input type="radio" id="additional-yes" name="have_additional_files" value="yes" required>
+                                <label for="additional-yes" class="checkbox-label">Yes</label>
+                            </div>
+                            <div class="">
+                                <input type="radio" id="additional-no" name="have_additional_files" value="no" required>
+                                <label for="additional-no" class="checkbox-label">No</label>
+                            </div>
+                        </div>
+                    </div>
 
-            </div>
+                    <!-- Hidden file upload section -->
+                    <div class="file-upload-section" id="additional-file-upload-section" style="display: none;">
+                        <label>
+                            <input type="file" id="additional-files" name="additional_files[]" multiple style='display: none;'>
+                            <span style='display: inline-block; margin: 1em;
+                                padding: 0.5em 1em; 
+                                background-color: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer;
+                            '>Take Photo or Upload Document</span>   
+                        </label>
+                        <div class="file-list" id="additional-file-list"></div>
+                    </div>
+                </div>
+
+
+
+
+            </div><!-- End of section -->
 
 
 
@@ -489,6 +523,57 @@
         licenseFileInput.nextElementSibling.textContent = 'Add Another Photo or Upload Document';
     });
 
+    const additionalYes = document.getElementById('additional-yes');
+    const additionalNo = document.getElementById('additional-no');
+    const additionalFileUploadSection = document.getElementById('additional-file-upload-section');
+    const additionalFileInput = document.getElementById('additional-files');
+    const additionalFileList = document.getElementById('additional-file-list');
+    let additionalFiles = [];
+
+    // Add event listeners to radio buttons
+    additionalYes.addEventListener('change', function () {
+        if (additionalYes.checked) {
+            additionalFileUploadSection.style.display = 'flex';
+        }
+    });
+    additionalNo.addEventListener('change', function () {
+        if (additionalNo.checked) {
+            additionalFileUploadSection.style.display = 'none';
+        }
+    });
+
+    // Handle adding files to the list
+    additionalFileInput.addEventListener('change', function () {
+        const files = additionalFileInput.files;
+        const fileArray = Array.from(files);
+
+        additionalFiles.push(files[0]);
+
+        fileArray.forEach(file => {
+
+            const listItem = document.createElement('li');
+            listItem.textContent = file.name;
+
+            // Create a delete button ('X')
+            const deleteButton = document.createElement('span');
+            deleteButton.textContent = ' X';
+            deleteButton.classList.add('delete-file');
+            deleteButton.addEventListener('click', function () {
+                listItem.remove(); // Remove the file from the list
+                // Find the index of the file in the additionalFiles array and remove it
+                const index = additionalFiles.indexOf(file);
+                if (index > -1) {
+                    additionalFiles.splice(index, 1); // Remove the file from the array
+                }
+            });
+
+            listItem.appendChild(deleteButton);
+            additionalFileList.appendChild(listItem);
+        });
+        additionalFileInput.nextElementSibling.textContent = 'Add Another Photo or Upload Document';
+    });
+
+
     
     // let vinData;
     async function VIN_Decoder() {
@@ -599,6 +684,14 @@
                 formData.append('registration_files[]', file); 
             });
         } 
+
+        if (additionalFiles.length > 0) {
+            // Add additional files to FormData
+            additionalFiles.forEach(file => {
+                formData.append('additional_files[]', file);
+            });
+        }
+
 
 
 

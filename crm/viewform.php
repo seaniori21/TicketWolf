@@ -6,6 +6,8 @@ include('../functions/conn_db.php');
 
 // Get form_id from website link
 $form_id = isset($_GET['form_id']) ? $_GET['form_id'] : null;
+$user_id = $_SESSION['primary_id'];
+$username = $_SESSION['username'];
 
 if ($form_id) {
     // Fetch counter data from counter table
@@ -34,6 +36,8 @@ if ($form_id) {
             SELECT 'license' AS file_group, license_files.* FROM license_files WHERE form_id = ?
             UNION ALL
             SELECT 'registration' AS file_group, registration_files.* FROM registration_files WHERE form_id = ?
+            UNION ALL
+            SELECT 'additional' AS file_group, additional_files.* FROM additional_files WHERE form_id = ?
         ";
 
         // Fetch all files related to this form_id
@@ -42,7 +46,7 @@ if ($form_id) {
             die("SQL Error: " . $conn->error);
         }
 
-        $stmt2->bind_param("iiii", $form_id,$form_id,$form_id, $form_id);
+        $stmt2->bind_param("iiiii", $form_id, $form_id, $form_id, $form_id, $form_id);
         $stmt2->execute();
 
         // Fetch the result for all files
@@ -113,7 +117,7 @@ function formatPhoneNumber($phone) {
     <div class='counter-details-container'>
         
         <?php if ($counter_data): ?>
-            <div class='title-text'>Ticket Number: <?php echo htmlspecialchars($counter_data['counter_today'])?> </div>
+            <div class='title-text'>Counter Number: <?php echo htmlspecialchars($counter_data['counter_today'])?> </div>
 
             <div class='counter-string-details'>
 
@@ -132,16 +136,24 @@ function formatPhoneNumber($phone) {
                         <li><strong>VIN:</strong> <?php echo htmlspecialchars($counter_data['vin']); ?></li>
                         <li><strong>License Plate:</strong> <?php echo htmlspecialchars($counter_data['license_plate']); ?></li>
                         <li><strong>Registered in NY:</strong> <?php echo htmlspecialchars($counter_data['registered_in_ny']); ?></li>
+                        <li><strong>Manufacturer:</strong> <?php echo htmlspecialchars($counter_data['manufacturer']); ?></li>
+                        <li><strong>Vehicle Type:</strong> <?php echo htmlspecialchars($counter_data['vehicle_type']); ?></li>
+                        <li><strong>Model Year:</strong> <?php echo htmlspecialchars($counter_data['model_year']); ?></li>
+                        <li><strong>Make:</strong> <?php echo htmlspecialchars($counter_data['make']); ?></li>
+                        <li><strong>Model:</strong> <?php echo htmlspecialchars($counter_data['model']); ?></li>
+                        <li><strong>Body Class:</strong> <?php echo htmlspecialchars($counter_data['body_class']); ?></li>
+
                     </ul>
                 </div>
 
                 <div class='info-container'>
-                    <div class='subtitle-text'>File Details</div>
+                    <div class='subtitle-text'>Important Details</div>
                     <ul>
                         <li><strong>Have Registration:</strong> <?php echo htmlspecialchars($counter_data['have_registration']); ?></li>
                         <li><strong>Have Insurance:</strong> <?php echo htmlspecialchars($counter_data['have_insurance']); ?></li>
                         <li><strong>Have Title:</strong> <?php echo htmlspecialchars($counter_data['have_title']); ?></li>
-                        <li><strong>Have license:</strong> <?php echo htmlspecialchars($counter_data['have_owner_license']); ?></li>
+                        <li><strong>Have License:</strong> <?php echo htmlspecialchars($counter_data['have_owner_license']); ?></li>
+                        <li><strong>Type of Tow:</strong> <?php echo htmlspecialchars($counter_data['type_of_tow']); ?></li>
                     </ul>
                 </div>
 
@@ -150,7 +162,6 @@ function formatPhoneNumber($phone) {
                     <div class='subtitle-text'>Form Details</div>
                     <ul>
                         <li><strong>Form ID:</strong> <?php echo htmlspecialchars($counter_data['form_id']); ?></li>
-                        <li><strong>Ticket Number:</strong> <?php echo htmlspecialchars($counter_data['counter_today']); ?></li>
                         <li><strong>Record Date:</strong> 
                                 <?php
                                     $date = new DateTime(htmlspecialchars($counter_data['uploaded_at']), new DateTimeZone('UTC'));
@@ -171,7 +182,7 @@ function formatPhoneNumber($phone) {
 
 
         <?php 
-        $file_types = ['insurance', 'title', 'license', 'registration']; // List of file types
+        $file_types = ['insurance', 'title', 'license', 'registration', 'additional']; // List of file types
         foreach ($file_types as $type): ?>
             <div class='line' style='margin-top:5%;'></div>
             <h2><?php echo ucfirst($type); ?> Files</h2>
@@ -244,7 +255,26 @@ function formatPhoneNumber($phone) {
                 <p>No <?php echo $type; ?> files found for this form ID.</p>
             <?php endif; ?>
         <?php endforeach; ?>
+
     </div>
+
+    <div class="comment-form-container" id="comment_section">
+        <h2>Leave a Comment</h2>
+        <form id="commentForm" method="POST">
+            <input type="hidden" name="form_id" value="<?php echo htmlspecialchars($form_id); ?>">
+            <input type="hidden" name="user_id" value="<?php echo htmlspecialchars($user_id); ?>">
+            <textarea id="comment" name="comment" rows="4" placeholder="Write your comment here..." required></textarea>
+            <button type="submit" class="submit-btn">Submit Comment</button>
+        </form>
+    </div>
+    <div id="comment_confirmation" style="display:none;">
+        <h2>Your Comment Has Been Recieved</h2>
+    </div>
+
+
+    <div style="margin-top:20px;">
+    </div>
+
 </div>
 
 
@@ -293,4 +323,38 @@ function formatPhoneNumber($phone) {
             printWindow.print();
         }, 1000);  
     }
+
+    $(document).ready(function() {
+        $('#commentForm').submit(function(event) {
+            event.preventDefault();  // Prevents the form from submitting the traditional way (page refresh)
+
+            // Get form data
+            var formData = $(this).serialize();  // Serializes the form data to send
+
+            // Perform the AJAX request
+            $.ajax({
+                url: '../functions/submit_comment.php',  // The PHP script to handle the comment submission
+                type: 'POST',  // HTTP method (POST in this case)
+                data: formData, 
+                success: function(response) {
+                    
+                    commentSection = document.getElementById("comment_section");
+                    commentSection.style.display = "none";
+
+                    commentConfirmation = document.getElementById("comment_confirmation");
+                    commentConfirmation.style.display = "block";
+                },
+                error: function(xhr, status, error) {
+                    // Handle errors (you can display an error message here)
+                    alert('Error submitting the comment. Please try again.');
+                    console.error('Error:', error);
+                }
+            });
+        });
+    });
 </script>
+
+
+<?php
+include('../includes/footer.php');
+?>

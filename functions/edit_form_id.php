@@ -24,6 +24,14 @@ $registered_in_ny = $_POST['registered_in_ny'];
 $have_registration = $_POST['have_registration'];
 $have_insurance = $_POST['have_insurance'];
 $have_title = $_POST['have_title'];
+$type_of_tow = $_POST['type_of_tow'];
+$manufacturer = $_POST['manufacturer'];
+$vehicle_type = $_POST['vehicle_type'];
+$model_year = $_POST['model_year'];
+$make = $_POST['make'];
+$model = $_POST['model'];
+$body_class = $_POST['body_class'];
+
 
 // Check if form_id is valid
 if ($form_id) {
@@ -44,21 +52,25 @@ if ($form_id) {
     $stmt = $conn->prepare("
         UPDATE counter 
         SET first_name = ?, last_name = ?, email = ?, phone = ?, vin = ?, license_plate = ?, 
-            registered_in_ny = ?, have_registration = ?, have_insurance = ?, have_title = ?
+            registered_in_ny = ?, have_registration = ?, have_insurance = ?, have_title = ?, type_of_tow = ?,
+            manufacturer = ?, vehicle_type = ?, model_year = ?, make = ?, model = ?, body_class = ?
         WHERE form_id = ?
     ");
 
     $stmt->bind_param(
-        "ssssssssssi",
+        "sssssssssssssssssi",
         $first_name, $last_name, $email, $phone, $vin, $license_plate, 
-        $registered_in_ny, $have_registration, $have_insurance, $have_title, $form_id
+        $registered_in_ny, $have_registration, $have_insurance, $have_title, $type_of_tow,
+        $manufacturer, $vehicle_type, $model_year, $make, $model, $body_class,
+        $form_id
     );
 
 
     if ($stmt->execute()) {
         // Log changes
         $changes = ''; 
-        foreach (['first_name', 'last_name', 'email', 'phone', 'vin', 'license_plate', 'registered_in_ny', 'have_registration', 'have_insurance', 'have_title'] as $field) {
+        foreach (['first_name', 'last_name', 'email', 'phone', 'vin', 'license_plate', 'registered_in_ny', 'have_registration', 'have_insurance', 'have_title',
+                    'type_of_tow', 'manufacturer', 'vehicle_type', 'model_year', 'make', 'model', 'body_class'] as $field) {
             if ($current_data[$field] !== $_POST[$field]) {
                 $changes .= $field . '=' . $current_data[$field] . '; ' ;
             }

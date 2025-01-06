@@ -3,15 +3,24 @@
     --custom-blue-testy: #3498db;
 }
 
-
 body {
     font-family: Arial, sans-serif;
     margin: 0;
-    padding: 0;
+    padding-bottom: 60px;
     overflow-x: auto;
     width: 100%;
-    height: 100%;
-    
+    min-height: 100vh;
+    position: relative;
+}
+
+.footer {
+    background-color: black;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    position: absolute; /* Position the footer at the bottom of the body */
+    bottom: 0;
+    width: 100%;  /* Ensures the footer spans the entire width of the viewport */
 }
 /* Flexbox to Center Everything */
 .main-container {
@@ -26,6 +35,14 @@ body {
     position: relative;
     overflow-x: auto;
     text-align: left;
+}
+
+.comment-form-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 300px;
 }
 
 .login-container{
@@ -445,13 +462,16 @@ input[type="file"] {
 }
 
 .counter-listing-container .pagination {
-    margin-top: 20px;
-    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap; /* Enables wrapping to a new line */
+    justify-content: center; /* Optional: Aligns items to the left */
+    margin: 20px 0px;
     text-align: center;
     background-color: #f1f1f1;
-    width: 99%;
+    width: 100%;
     padding: 10px 0px;
-    min-width: 300px;
+    overflow-x: auto;
+
 }
 
 .counter-listing-container .pagination a {
@@ -522,9 +542,11 @@ input[type="file"] {
     min-width: 150px; 
 }
 
-.counter-table a:hover{
-    color: #0056b3;
+.counter-table a{
+    color: blue;
 }
+
+
 .counter-table span {
     margin: 0 8px; /* Adds space to the left and right of the separator */
     font-weight: normal;

@@ -22,22 +22,48 @@ $conn->select_db($dbname);
 //     echo "Error dropping table: " . $conn->error;
 // }
 
-$sql_alter_counter_table = "
-ALTER TABLE counter
-ADD COLUMN manufacturer VARCHAR(255),
-ADD COLUMN vehicle_type VARCHAR(255),
-ADD COLUMN model_year INT,
-ADD COLUMN make VARCHAR(255),
-ADD COLUMN model VARCHAR(255),
-ADD COLUMN body_class VARCHAR(255);
-";
 
+
+
+/*
+Make user roles table
+One for view only and edit only
+add to user_table the num days cant access files 
+
+add column for type of tow
+
+add other files in form...add random files whatevs
+*/
+
+
+// $sql_alter_table = "
+// ALTER TABLE counter
+// ADD type_of_tow VARCHAR(255)
+// ";
+// // Execute the table creation query
+// if ($conn->query($sql_alter_table) === TRUE) {
+//     echo "Altered table successfully!<br>";
+// } else {
+//     echo "Error altering table: " . $conn->error;
+// }
+$sql_create_comments_table = "
+CREATE TABLE IF NOT EXISTS comments (
+    primary_id INT AUTO_INCREMENT PRIMARY KEY,
+    comment VARCHAR(255) NOT NULL,
+    form_id INT NOT NULL,
+    user_id INT NOT NULL,
+    uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (form_id) REFERENCES counter(form_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(primary_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+";
 // Execute the table creation query
-if ($conn->query($sql_alter_counter_table) === TRUE) {
-    echo "altered table<br>";
+if ($conn->query($sql_create_comments_table) === TRUE) {
+    echo "Table 'comments' created successfully or already existed!<br>";
 } else {
-    echo "Error altering table: " . $conn->error;
+    echo "Error creating table: " . $conn->error;
 }
+
 
 $sql_create_user_table = "
 CREATE TABLE IF NOT EXISTS users (
@@ -95,18 +121,6 @@ if ($conn->query($sql_create_counter_table) === TRUE) {
 } else {
     echo "Error creating table: " . $conn->error;
 }
-
-
-// $sql_add_registration_column = "
-// ALTER TABLE counter
-// ADD have_registration ENUM('yes', 'no') NOT NULL DEFAULT 'no';
-// ";
-// // Execute the ALTER TABLE query
-// if ($conn->query($sql_add_registration_column) === TRUE) {
-//     echo "Column 'have_registration' added successfully!<br>";
-// } else {
-//     echo "Error adding column: " . $conn->error;
-// }
 
 
 $sql_create_insurance_files_table = "
@@ -178,6 +192,26 @@ if ($conn->query($sql_create_license_files_table) === TRUE) {
     echo "Table 'license_files' created successfully or already existed!<br>";
 } else {
     echo "Error creating license_files table: " . $conn->error;
+}
+
+$sql_create_additional_files_table = "
+CREATE TABLE IF NOT EXISTS additional_files (
+    primary_id INT AUTO_INCREMENT PRIMARY KEY,
+    file_name VARCHAR(255) NOT NULL,
+    file_type VARCHAR(255) NOT NULL,
+    file_data LONGBLOB NOT NULL, -- Store binary file data
+    form_id INT NOT NULL,
+    uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    user_id INT,
+    FOREIGN KEY (form_id) REFERENCES counter(form_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(primary_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+";
+// Execute the table creation query
+if ($conn->query($sql_create_additional_files_table) === TRUE) {
+    echo "Table 'additional_files' created successfully or already existed!<br>";
+} else {
+    echo "Error creating additional_files table: " . $conn->error;
 }
 
 

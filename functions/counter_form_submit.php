@@ -255,6 +255,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $stmt2->close();
             }
         }
+        if (isset($_FILES['additional_files']) && !empty($_FILES['additional_files']['name'][0])) {
+            // echo "Uploading additional files<br>";
+            $files = $_FILES['additional_files'];
+        
+            for ($i = 0; $i < count($files['name']); $i++) {
+                $file_name = $files['name'][$i];
+                $file_type = $files['type'][$i];
+                $file_tmp = $files['tmp_name'][$i];
+                $file_data = file_get_contents($file_tmp);
+        
+                if ($files['error'][$i] === UPLOAD_ERR_OK) {
+                    $additionalFiles[] = [
+                        'tmp_name' => $files['tmp_name'][$i], // Temporary file path
+                        'name' => $files['name'][$i],         // Original file name
+                        'type' => $files['type'][$i],         // File MIME type
+                        'data' => file_get_contents($files['tmp_name'][$i]) // File content (optional, if needed)
+                    ];
+                }
+        
+                // Prepare SQL statement for additional_files table
+                $stmt2 = $conn->prepare("INSERT INTO additional_files 
+                    (form_id, file_name, file_type, file_data) 
+                    VALUES (?, ?, ?, ?)");
+        
+                if (!$stmt2) {
+                    die("SQL Error: " . $conn->error);
+                }
+        
+                // Bind parameters for additional_files table
+                $stmt2->bind_param("isss", $form_id, $file_name, $file_type, $file_data);
+        
+                // Execute the query to insert additional file data
+                if ($stmt2->execute()) {
+                    //echo "additional file uploaded successfully: " . htmlspecialchars($file_name) . "<br>";
+                } else {
+                    //echo "Error uploading additional file: " . $stmt2->error . "<br>";
+                }
+                $stmt2->close();
+            }
+        }
+        
         
         $emailArray = ["release@benandninoauto.com", "support@towwolf.com"];
 

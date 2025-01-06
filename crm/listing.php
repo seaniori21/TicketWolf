@@ -26,6 +26,8 @@ if (isset($_SESSION['primary_id']) && isset($_SESSION['username'])) {
 
     // Close the connection when done
     $conn->close();
+
+
 }else{
     header("Location: index.php");     
     exit();
@@ -52,7 +54,11 @@ function formatPhoneNumber($phone) {
     // If the phone number is not valid (less or more than 10 digits), return the original
     return $phone;
 }
+
+
+
 ?>
+
 
 
 <div class='white-container'>
@@ -82,6 +88,12 @@ function formatPhoneNumber($phone) {
                         <th>Has Insurance</th>
                         <th>Has Title</th>
                         <th>Has Owner License</th>
+                        <th>Manufacturer</th>
+                        <th>Vehicle Type</th>
+                        <th>Model Year</th>
+                        <th>Make</th>
+                        <th>Model</th>
+                        <th>Body Class</th>
                         
                     </tr>
                 </thead>
@@ -119,6 +131,13 @@ function formatPhoneNumber($phone) {
                             <td><?php echo htmlspecialchars($counter['have_insurance']); ?></td>
                             <td><?php echo htmlspecialchars($counter['have_title']); ?></td>
                             <td><?php echo htmlspecialchars($counter['have_owner_license']); ?></td>
+                            <td><?php echo htmlspecialchars($counter['manufacturer']); ?></td>
+                            <td><?php echo htmlspecialchars($counter['vehicle_type']); ?></td>
+                            <td><?php echo htmlspecialchars($counter['model_year']); ?></td>
+                            <td><?php echo htmlspecialchars($counter['make']); ?></td>
+                            <td><?php echo htmlspecialchars($counter['model']); ?></td>
+                            <td><?php echo htmlspecialchars($counter['body_class']); ?></td>
+
                             
                         </tr>
                     <?php endwhile; ?>
@@ -132,16 +151,24 @@ function formatPhoneNumber($phone) {
 
         <div class='counter-listing-container'>
             <div class="pagination">
-                    <?php if ($page > 1): ?>
-                        <a href="?page=<?php echo $page - 1; ?>">Previous</a>
-                    <?php endif; ?>
+                <?php if ($page > 1): ?>
+                    <a href="?page=1">First</a>
+                    <a href="?page=<?php echo $page - 1; ?>">Previous</a>
+                <?php endif; ?>
 
-                    <span>Page <?php echo $page; ?> of <?php echo $total_pages; ?></span>
+                <span>Page <?php echo $page; ?> of <?php echo $total_pages; ?></span>
 
-                    <?php if ($page < $total_pages): ?>
-                        <a href="?page=<?php echo $page + 1; ?>">Next</a>
-                    <?php endif; ?>
+                <?php if ($page < $total_pages): ?>
+                    <a href="?page=<?php echo $page + 1; ?>">Next</a>
+                    <a href="?page=<?php echo $total_pages; ?>">Last</a>
+                <?php endif; ?>
             </div>
+
         </div>
     </div>
 </div>
+
+
+<?php
+include('../includes/footer.php');
+?>

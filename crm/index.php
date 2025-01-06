@@ -79,3 +79,9 @@ if (isset($_GET['error'])) {
     ';
 }
 ?>
+
+
+
+<?php
+include('../includes/footer.php');
+?>

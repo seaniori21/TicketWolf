@@ -75,6 +75,8 @@ if (isset($_SESSION['primary_id']) && isset($_SESSION['username'])) {
                 SELECT 'license' AS file_group, license_files.* FROM license_files WHERE form_id = ?
                 UNION ALL
                 SELECT 'registration' AS file_group, registration_files.* FROM registration_files WHERE form_id = ?
+                UNION ALL
+                SELECT 'additional' AS file_group, additional_files.* FROM additional_files WHERE form_id = ?
             ";
 
             // Fetch all files related to this form_id
@@ -83,7 +85,7 @@ if (isset($_SESSION['primary_id']) && isset($_SESSION['username'])) {
                 die("SQL Error: " . $conn->error);
             }
 
-            $stmt2->bind_param("iiii", $form_id,$form_id,$form_id, $form_id);
+            $stmt2->bind_param("iiiii", $form_id, $form_id, $form_id, $form_id, $form_id);
             $stmt2->execute();
 
             // Fetch the result for all files
@@ -158,7 +160,7 @@ include '../includes/header.php';
     <?php if ($counter_data): ?>
 
 
-        <div class='title-text'>Ticket Number: <?php echo htmlspecialchars($counter_data['counter_today'])?> </div>
+        <div class='title-text'>Counter Number: <?php echo htmlspecialchars($counter_data['counter_today'])?> </div>
         <div class='info-container' style='display:flex; flex-direction:row; gap:50px; padding:10px; border-bottom:1px solid grey'>
                         <div><strong>Form ID:</strong> <?php echo htmlspecialchars($counter_data['form_id']); ?></div>
                         <div><strong>Record Date:</strong> 
@@ -227,6 +229,25 @@ include '../includes/header.php';
                                 <option value="no" <?php if ($counter_data['registered_in_ny'] == 'no') echo 'selected'; ?>>No</option>
                             </select>
                         </li>
+                        <li><strong>Manufacturer:</strong>
+                            <input type="text" name="manufacturer" value="<?php echo htmlspecialchars($counter_data['manufacturer']); ?>" />
+                        </li>
+                        <li><strong>Vehicle Type:</strong>
+                            <input type="text" name="vehicle_type" value="<?php echo htmlspecialchars($counter_data['vehicle_type']); ?>" />
+                        </li>
+                        <li><strong>Model Year:</strong>
+                            <input type="text" name="model_year" value="<?php echo htmlspecialchars($counter_data['model_year']); ?>" />
+                        </li>
+                        <li><strong>Make:</strong>
+                            <input type="text" name="make" value="<?php echo htmlspecialchars($counter_data['make']); ?>" />
+                        </li>
+                        <li><strong>Model:</strong>
+                            <input type="text" name="model" value="<?php echo htmlspecialchars($counter_data['model']); ?>" />
+                        </li>
+                        <li><strong>Body Class:</strong>
+                            <input type="text" name="body_class" value="<?php echo htmlspecialchars($counter_data['body_class']); ?>" />
+                        </li>
+
                     </ul>
                 </div>
                 
@@ -258,6 +279,16 @@ include '../includes/header.php';
                                 <option value="no" <?php if ($counter_data['have_owner_license'] == 'no') echo 'selected'; ?>>No</option>
                             </select>
                         </li>
+                        <li><strong>Type of Tow:</strong>
+                            <select name="type_of_tow" required>
+                                <option value="" disabled selected>Select Type of Tow</option>
+                                <option value="Tow_Type_1" <?php echo ($counter_data['type_of_tow'] == 'Tow_Type_1') ? 'selected' : ''; ?>>Tow Type 1</option>
+                                <option value="Tow_Type_2" <?php echo ($counter_data['type_of_tow'] == 'Tow_Type_2') ? 'selected' : ''; ?>>Tow Type 2</option>
+                                <option value="Tow_Type_3" <?php echo ($counter_data['type_of_tow'] == 'Tow_Type_3') ? 'selected' : ''; ?>>Tow Type 3</option>
+                                <option value="Tow_Type_4" <?php echo ($counter_data['type_of_tow'] == 'Tow_Type_4') ? 'selected' : ''; ?>>Tow Type 4</option>
+                            </select>
+                        </li>
+
                     </ul>
                 </div>
 
@@ -277,7 +308,7 @@ include '../includes/header.php';
     
         <div class='file-section'>
             <?php 
-            $file_types = ['insurance', 'title', 'license', 'registration']; // List of file types
+            $file_types = ['insurance', 'title', 'license', 'registration', 'additional']; // List of file types
             
             foreach ($file_types as $type): ?>
             <div class='line'></div>
@@ -368,6 +399,7 @@ include '../includes/header.php';
                     <div class="cameraSection" id="cameraSection_<?php echo $type; ?>" style="display: none;">
                         <video id="video_<?php echo $type; ?>" autoplay></video>
                         <button type="button" id="capture_<?php echo $type; ?>">Capture Photo</button>
+                        <button type="button" class="goBackCam" data-type="<?php echo $type; ?>">Go Back</button>
                         <canvas id="canvas_<?php echo $type; ?>" style="display:none;"></canvas>
                     </div>
 
@@ -397,6 +429,7 @@ include '../includes/header.php';
                         <label for="file_<?php echo $type; ?>">Upload a <?php echo ucfirst($type); ?> File:</label>
                         <input type="file" name="file" id="file_<?php echo $type; ?>" required>
                         <button type="submit">Upload</button>
+                        <button type="button" class="goBackFile" data-type="<?php echo $type; ?>">Go Back</button>
                     </div>
                 </form>
 
@@ -404,8 +437,20 @@ include '../includes/header.php';
 
             
         </div>
-
+        <div class='line'></div>
+        <div class="comment-form-container" id="comment_section">
+        <h2>Leave a Comment</h2>
+        <form id="commentForm" method="POST">
+            <input type="hidden" name="form_id" value="<?php echo htmlspecialchars($form_id); ?>">
+            <input type="hidden" name="user_id" value="<?php echo htmlspecialchars($user_id); ?>">
+            <textarea id="comment" name="comment" rows="4" placeholder="Write your comment here..." required></textarea>
+            <button type="submit" class="submit-btn">Submit Comment</button>
+        </form>
     </div>
+    <div id="comment_confirmation" style="display:none;">
+        <h2>Your Comment Has Been Recieved</h2>
+    </div>
+
 </div>
 
 
@@ -413,6 +458,34 @@ include '../includes/header.php';
 <script>
 
     
+    document.querySelectorAll(".goBackCam").forEach(button => {
+        button.addEventListener("click",  function() {
+            const type = this.getAttribute("data-type");
+
+            const showCameraButton = document.querySelector(`.showCameraButton[data-type="${type}"]`);
+            showCameraButton.style.display = 'inline-flex';
+            const showFileSectionButton = document.querySelector(`.showFileSectionButton[data-type="${type}"]`);
+            showFileSectionButton.style.display = 'inline-flex';
+
+            const cameraSection = document.getElementById("cameraSection_" + type);
+            cameraSection.style.display = 'none'; 
+        });
+    });
+
+    document.querySelectorAll(".goBackFile").forEach(button => {
+        button.addEventListener("click",  function() {
+            const type = this.getAttribute("data-type");
+
+            const showCameraButton = document.querySelector(`.showCameraButton[data-type="${type}"]`);
+            showCameraButton.style.display = 'inline-flex';
+            const showFileSectionButton = document.querySelector(`.showFileSectionButton[data-type="${type}"]`);
+            showFileSectionButton.style.display = 'inline-flex';
+
+            const uploadFileSection = document.getElementById("uploadFileSection_" + type);
+            uploadFileSection.style.display = 'none'; 
+        });
+    });
+
     document.querySelectorAll(".showFileSectionButton").forEach(button => {
         button.addEventListener("click",  function() {
             const type = this.getAttribute("data-type");
@@ -488,11 +561,16 @@ include '../includes/header.php';
 
             // Capture the photo when the capture button is clicked
             captureButton.addEventListener("click", function() {
+            
+                // Set canvas dimensions to match video resolution
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                
                 const context = canvas.getContext("2d");
                 context.drawImage(video, 0, 0, canvas.width, canvas.height); 
 
 
-                const imageData = canvas.toDataURL("image/png");
+                const imageData = canvas.toDataURL("image/jpeg", 1.0); // Higher quality format
 
 
                 fileInput.value = imageData;
@@ -640,3 +718,8 @@ include '../includes/header.php';
     });
 
 </script>
+
+
+<?php
+include('../includes/footer.php');
+?>

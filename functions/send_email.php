@@ -28,7 +28,7 @@ $registered_in_ny, $have_insurance, $have_title, $have_owner_license, $counter_n
         $mail->Password = 'enter_password'; // Replace with your App Password
 
         // Email settings
-        $mail->setFrom('towwolf1@gmail.com', 'Contact Form'); // Sender email and name
+        $mail->setFrom('support@towwolf.com', 'Contact Form'); // Sender email and name
         $mail->addAddress($email); // Recipient email
         $mail->Subject = 'Your Line Placement Number Is: '. $counter_number;  // Adjust subject based on the form
 
@@ -81,7 +81,7 @@ $insuranceFiles = [], $titleFiles = [], $licenseFiles = [], $registrationFiles =
         $mail->Password = 'enter_password'; // Replace with your App Password
 
         // Email settings
-        $mail->setFrom('towwolf1@gmail.com', 'Contact Form'); // Sender email and name
+        $mail->setFrom('support@towwolf.com', 'Contact Form'); // Sender email and name
         $mail->addAddress($admin_email); // Recipient email
         $mail->Subject = 'Your Line Number Is: '. $counter_number;  // Adjust subject based on the form
 

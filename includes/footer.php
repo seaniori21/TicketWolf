@@ -1,5 +1,6 @@
-<footer class="footer">
-    <p>This is the footer</p>
-</footer>
 </body>
+<footer class="footer">
+    <p>Powered By @iblade</p>
+</footer>
+
 </html>
