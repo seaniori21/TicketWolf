@@ -13,22 +13,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $last_name = htmlspecialchars($_POST['last_name']);
     $email = htmlspecialchars($_POST['email']);
     $phone = isset($_POST['phone']) ? htmlspecialchars($_POST['phone']) : null;
-    $vin = htmlspecialchars($_POST['vin']);
+    $vin = strtoupper(htmlspecialchars($_POST['vin']));
     $drivers_license = isset($_POST['drivers_license']) ? htmlspecialchars($_POST['drivers_license']) : null;
     $license_plate = isset($_POST['license_plate']) ? htmlspecialchars($_POST['license_plate']) : null;
     $is_owner = htmlspecialchars($_POST['is_owner']);
     $registered_in_ny = htmlspecialchars($_POST['registered_in_ny']);
     $have_insurance = isset($_POST['have_insurance']) ? htmlspecialchars($_POST['have_insurance']) : null;
-    $have_title = htmlspecialchars($_POST['have_title']);
-    $have_owner_license = htmlspecialchars($_POST['have_owner_license']);
+    $have_title = isset($_POST['have_title']) ? htmlspecialchars($_POST['have_title']) : null;
+    $have_owner_license = isset($_POST['have_owner_license']) ? htmlspecialchars($_POST['have_owner_license']) : null; 
 
     //VIN
-    $manufacturer = htmlspecialchars($_POST['manufacturer']);
-    $vehicle_type = htmlspecialchars($_POST['vehicle_type']);
-    $model_year = htmlspecialchars($_POST['model_year']);
-    $make = htmlspecialchars($_POST['make']);
-    $model = htmlspecialchars($_POST['model']);
-    $body_class = htmlspecialchars($_POST['body_class']);
+    $manufacturer = isset($_POST['manufacturer']) ? htmlspecialchars($_POST['manufacturer']) : null;
+    $vehicle_type = isset($_POST['vehicle_type']) ? htmlspecialchars($_POST['vehicle_type']) : null;
+    $model_year = isset($_POST['model_year']) ? htmlspecialchars($_POST['model_year']) : null;
+    $make = isset($_POST['make']) ? htmlspecialchars($_POST['make']) : null;
+    $model = isset($_POST['model']) ? htmlspecialchars($_POST['model']) : null;
+    $body_class = isset($_POST['body_class']) ? htmlspecialchars($_POST['body_class']) : null;
+    
 
 
 

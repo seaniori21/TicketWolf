@@ -13,6 +13,7 @@
 </head>
 <body>
 
+
 <div class="main-container">
     <div class='form-header'>
         <div class='header-container'>
@@ -41,10 +42,9 @@
                 </div>
 
                 <div class="form-group" id="vin-group">
-                    <label for="vin">VIN <span class="required">*</span></label>
-                    <input type="text" id="vin" name="vin" required
-                    pattern="[A-Za-z0-9]{17}"  maxlength="17" minlength="17"
-                    title="VIN must be exactly 17 alphanumeric characters"
+                    <label for="vin">VIN</label>
+                    <input type="text" id="vin" name="vin"
+                    
                     >
                 </div>
 
@@ -56,13 +56,12 @@
                 <div class="form-group">
                     <label for="license-plate">License Plate Number</label>
                     <input type="text" id="license-plate" name="license_plate"
-                    pattern="[A-Za-z0-9]{6}"  maxlength="6" minlength="6"
-                    title="License Plate Number must be exactly 6 alphanumeric characters"
+
                     >
                 </div>
 
                 <div class="form-group">
-                    <label for="phone">Phone Number <span class="optional">(Optional)</span></label>
+                    <label for="phone">Phone Number</label>
                     <input type="tel" id="phone" name="phone" placeholder="(___) -___-____"
                         pattern="^\(\d{3}\)\s?-\s?\d{3}\s?-\s?\d{4}$"
                         oninput="formatPhone(this)" maxlength="18"
@@ -117,9 +116,13 @@
                     </div>
                 </div>
 
+<?php 
+    define("FILECOMMENT", "*For expedited service please submit the document if you have it currently on you. If it is in your vehicle a representative will help you after submission");
+?>
+
                 <div class="form-group">
                     <div class="form-group-files">
-                        <label>Have Registration?<span class="required">*</span></label>
+                        <label>Have Registration?<span class="required"></span></label>
                         <div class="row-flex">
                             <div class="">
                                 <input type="radio" id="registration-yes" name="have_registration" value="yes" required>
@@ -141,6 +144,7 @@
                                 background-color: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer;
                             '>Take Photo or Upload Document</span>     
                         </label>
+                        <p style="font-size:10px; margin:0px;"> <?php echo FILECOMMENT ?> </p>
                         <div class="file-list" id="registration-file-list"></div>
                     </div>
                 </div>
@@ -171,6 +175,7 @@
                                 background-color: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer;
                             '>Take Photo or Upload Document</span>    
                         </label>
+                        <p style="font-size:10px; margin:0px;"> <?php echo FILECOMMENT ?> </p>
                         <div class="file-list" id="insurance-file-list"></div>
                     </div>
                 </div>
@@ -201,6 +206,7 @@
                                 background-color: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer;
                             '>Take Photo or Upload Document</span>   
                         </label>
+                        <p style="font-size:10px; margin:0px;"> <?php echo FILECOMMENT ?> </p>
                         <div class="file-list" id="title-file-list"></div>
                     </div>
                 </div>
@@ -232,7 +238,7 @@
                                 background-color: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer;
                             '>Take Photo or Upload Document</span>  
                         </label>
-
+                        <p style="font-size:10px; margin:0px;"> <?php echo FILECOMMENT ?> </p>
                         <div class="file-list" id="license-file-list"></div>
                     </div>
                 </div>
@@ -261,6 +267,7 @@
                                 background-color: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer;
                             '>Take Photo or Upload Document</span>   
                         </label>
+                        <p style="font-size:10px; margin:0px;"> <?php echo FILECOMMENT ?> </p>
                         <div class="file-list" id="additional-file-list"></div>
                     </div>
                 </div>
@@ -577,11 +584,10 @@
     
     // let vinData;
     async function VIN_Decoder() {
-        const vin = document.getElementById('vin').value.toUpperCase();
+        let vin = document.getElementById('vin').value.toUpperCase();
 
         if (!vin) {
-            alert("Please enter a VIN.");
-            return null;
+            vin = "blasjsn12321342121"
         }
         const result = await new Promise((resolve, reject) => {
             $.ajax({
@@ -613,16 +619,11 @@
 
     form.addEventListener('submit', async function(event) {
         event.preventDefault(); // TODO
+
+        const formData = new FormData();//Has all form data
+
         const vinData = await VIN_Decoder();
         vinErrorWarning.style.display='none';
-
-        if (!vinData || vinData === "error") {
-           
-            alert("Wrong VIN Number.\nThe VIN entered is not a valid VIN Number.\nPlease Correct");
-            vinErrorWarning.style.display='block';
-            vinGroup.style.border = "3px solid red";
-            return; 
-        }
     
         // alert('In progress');
         submitButton.disabled = true;
@@ -631,17 +632,21 @@
         cleanPhoneNumber();
 
 
+        if (vinData !== "error") {
+           
+            const vinFields = ["Manufacturer", "VehicleType", "ModelYear", "Make", "Model", "BodyClass"];
+            const sqlFields = ["manufacturer", "vehicle_type", "model_year", "make", "model", "body_class"];
 
-        const formData = new FormData();//Has all form data
 
-        const vinFields = ["Manufacturer", "VehicleType", "ModelYear", "Make", "Model", "BodyClass"];
-        const sqlFields = ["manufacturer", "vehicle_type", "model_year", "make", "model", "body_class"];
+            for(let i=0; i<vinFields.length; i++){
+                formData.append(sqlFields[i], vinData[vinFields[i]]);
+            }
 
-
-        for(let i=0; i<vinFields.length; i++){
-            formData.append(sqlFields[i], vinData[vinFields[i]]);
+            //alert("Wrong VIN Number.\nThe VIN entered is not a valid VIN Number.\nPlease Correct");
+            // vinErrorWarning.style.display='block';
+            // vinGroup.style.border = "3px solid red";
+            // return; 
         }
-
 
 
         // Add other form fields to the formData
