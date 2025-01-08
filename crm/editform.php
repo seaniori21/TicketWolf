@@ -281,11 +281,10 @@ include '../includes/header.php';
                         </li>
                         <li><strong>Type of Tow:</strong>
                             <select name="type_of_tow" required>
-                                <option value="" disabled selected>Select Type of Tow</option>
-                                <option value="Tow_Type_1" <?php echo ($counter_data['type_of_tow'] == 'Tow_Type_1') ? 'selected' : ''; ?>>Tow Type 1</option>
-                                <option value="Tow_Type_2" <?php echo ($counter_data['type_of_tow'] == 'Tow_Type_2') ? 'selected' : ''; ?>>Tow Type 2</option>
-                                <option value="Tow_Type_3" <?php echo ($counter_data['type_of_tow'] == 'Tow_Type_3') ? 'selected' : ''; ?>>Tow Type 3</option>
-                                <option value="Tow_Type_4" <?php echo ($counter_data['type_of_tow'] == 'Tow_Type_4') ? 'selected' : ''; ?>>Tow Type 4</option>
+                                <option value="" disabled selected>Select Type of Tow</option>ROTOW/DARP/PRIVATE
+                                <option value="ROTOW" <?php echo ($counter_data['type_of_tow'] == 'ROTOW') ? 'selected' : ''; ?>>ROTOW</option>
+                                <option value="DARP" <?php echo ($counter_data['type_of_tow'] == 'DARP') ? 'selected' : ''; ?>>DARP</option>
+                                <option value="PRIVATE" <?php echo ($counter_data['type_of_tow'] == 'PRIVATE') ? 'selected' : ''; ?>>PRIVATE</option>
                             </select>
                         </li>
 
