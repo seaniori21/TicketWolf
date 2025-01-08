@@ -282,7 +282,7 @@
 
 
             <div id="loading-indicator" style="display: none;">
-                <p>Submitting your form... <span class="spinner">🔄</span></p>
+                <p>Submitting your form, please wait...</p>
             </div>
             <div id="vin-error" class="error" style="display: none;">
                 The VIN entered is not a valid VIN Number.<br>
@@ -295,6 +295,10 @@
     </div>
 
 </div>
+
+<?php
+include('includes/footer.php');
+?>
 
 <script>
     function formatPhone(input) {

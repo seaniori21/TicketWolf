@@ -621,7 +621,7 @@ input[type="file"] {
 
 .counter-string-details ul {
     list-style-type: none; /* Remove bullets */
-    padding: 0px; 
+    padding: 1px; 
     margin: 0px;
 }
 .counter-string-details li {
@@ -631,6 +631,7 @@ input[type="file"] {
     align-items: start;
     gap: 10px;
     padding-left: 20px;
+    padding: 1px; 
 }
 
 
