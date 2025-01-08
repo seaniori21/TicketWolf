@@ -387,6 +387,7 @@ include '../includes/header.php';
 
                 <button type="button" class="showCameraButton" data-type="<?php echo $type; ?>">Take A Photo</button>
                 <button type="button" class="showFileSectionButton" data-type="<?php echo $type; ?>">Attach A File</button>
+                <button type="button" class="showScanSectionButton" data-type="<?php echo $type; ?>">Use Scanner</button>
 
 
                 <!--  Taking A Photo Section  --> 
@@ -427,8 +428,36 @@ include '../includes/header.php';
                     <div>
                         <label for="file_<?php echo $type; ?>">Upload a <?php echo ucfirst($type); ?> File:</label>
                         <input type="file" name="file" id="file_<?php echo $type; ?>" required>
-                        <button type="submit">Upload</button>
                         <button type="button" class="goBackFile" data-type="<?php echo $type; ?>">Go Back</button>
+                        <button type="submit">Upload</button>
+                    </div>
+                </form>
+
+
+                <!--  Uploading Scan Section  --> 
+                <form 
+                    class="edit-form-file-upload-section" 
+                    method="POST" 
+                    action="../functions/upload_file.php" 
+                    enctype="multipart/form-data" 
+                    style="display:none; margin-bottom:20px" 
+                    id="uploadScanSection_<?php echo $type ?>">
+                    
+                    <input type="hidden" name="form_id" value="<?php echo htmlspecialchars($form_id); ?>">
+                    <input type="hidden" name="file_group" value="<?php echo htmlspecialchars($type); ?>">
+                    <input type="hidden" name="upload_type" value="file">
+                    
+                    <div>
+                        <label for="file_<?php echo $type; ?>"></label>
+                        <input type="hidden" name="file" id="file_<?php echo $type; ?>" required>
+
+                        <button type="button" id="scanButton_<?php echo $type; ?>">Scan</button>
+                        <p id="scanLoading" style="display:none;">Scanning in progress...</p>
+                        <div id="scanPreview"></div>
+
+
+                        <button type="scanUpload">Upload</button>
+                        <button type="button" class="goBackScan" data-type="<?php echo $type; ?>">Go Back</button>
                     </div>
                 </form>
 
@@ -455,6 +484,67 @@ include '../includes/header.php';
 
 
 <script>
+    document.querySelectorAll(".showScanSectionButton").forEach(button => {
+        button.addEventListener("click",  function() {
+            const type = this.getAttribute("data-type");
+
+            const submitPhotoButton = document.querySelector(`.showCameraButton[data-type="${type}"]`);
+            submitPhotoButton.style.display = 'none';
+            const showFileSectionButton = document.querySelector(`.showFileSectionButton[data-type="${type}"]`);
+            showFileSectionButton.style.display = 'none';
+            const showScanSectionButton = document.querySelector(`.showScanSectionButton[data-type="${type}"]`);
+            showScanSectionButton.style.display = 'none';
+
+
+            const scanSection = document.getElementById("uploadScanSection_" + type);
+            scanSection.style.display = "flex";
+
+            //AFTER SHOWING SCAN SECTION
+            const scanButton = document.getElementById("scanButton_" + type);
+
+            scanButton.addEventListener("click", function() {
+                const container = this.closest("form"); 
+
+                const scanLoadingElement = container.querySelector('#scanLoading');
+                const scanPreviewElement = container.querySelector('#scanPreview');
+
+                scanLoadingElement.style.display = 'flex';
+                scanButton.style.display = 'none';
+
+
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', '../functions/scan_file.php', true);
+
+                xhr.onload = function () {
+                    if (xhr.status === 200) {
+                        // Hide loading message
+                        scanLoadingElement.style.display = 'none';
+
+
+                        var filePath = xhr.responseText;
+                        scanPreviewElement.innerHTML = '<object data="' + filePath + '" type="application/pdf" width="600" height="400"></object>';
+                        document.getElementById('file_' + type).value = filePath; 
+
+            
+                        console.log("PDF file preview is working. File path: " + filePath);
+                    }
+                };
+                // Send the request
+                xhr.send();
+
+                
+
+
+                // scanUpload = container.querySelector('#scanUpload');
+                // scanUpload.addEventListener("click", function() {
+                //     const fileGroupInput = container.querySelector("input[name='file_group']");
+                //     const formIdInput = container.querySelector("input[name='form_id']");
+                //     const fileInput = container.querySelector("input[name='file']");
+                // });
+
+            });
+        });
+    });
 
     
     document.querySelectorAll(".goBackCam").forEach(button => {
@@ -470,7 +560,6 @@ include '../includes/header.php';
             cameraSection.style.display = 'none'; 
         });
     });
-
     document.querySelectorAll(".goBackFile").forEach(button => {
         button.addEventListener("click",  function() {
             const type = this.getAttribute("data-type");
