@@ -452,7 +452,7 @@ include '../includes/header.php';
                         <label for="file_<?php echo $type; ?>"></label>
                         <input type="hidden" name="file" id="file_<?php echo $type; ?>" required>
 
-                        <p id="scanLoading" style="display:none;">Scanning in progress...</p>
+                        <p id="scanLoading" style="display:none;">Scanning in Progress...</p>
                         <div id="scanPreview"></div>
 
                         <div class="row-flex">
@@ -507,41 +507,30 @@ include '../includes/header.php';
 
             scanButton.addEventListener("click", function() {
                 const container = this.closest("form"); 
-
                 const scanLoadingElement = container.querySelector('#scanLoading');
                 const scanPreviewElement = container.querySelector('#scanPreview');
                 const fileInput = container.querySelector("input[name='file']");
 
                 scanLoadingElement.style.display = 'flex';
                 scanButton.style.display = 'none';
-
-
-                var xhr = new XMLHttpRequest();
-                xhr.open('GET', '../functions/scan_file.php', true);
-
-                xhr.onload = function () {
-                    if (xhr.status === 200) {
-                        // Hide loading message
-                        scanLoadingElement.style.display = 'none';
-                        var response = JSON.parse(xhr.responseText);
-
-
-                        var filePath = response.filename;
-                        console.log("RESPONSE TEXT FROM SCAN_FILE:" + response);
-                        scanPreviewElement.innerHTML = '<object data="' + filePath + '" type="application/pdf" width="600" height="400"></object>';
-                        fileInput.value = filePath; 
-
-            
-                        console.log("PDF file preview is working. File path: " + filePath);
-                    }else{
-                        console.log("ERROR:"+ xhr.status +  " - " + xhr.statusText);
+                fetch("http://localhost:3000/run-script", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json"
                     }
-                };
-                // Send the request
-                xhr.send();
-
-                
-
+                })
+                .then(response => response.blob())
+                .then(blob  => {
+                    scanPreviewElement.textContent = "Scanning in Progress";
+                    scanLoadingElement.style.display = 'none';
+                    const url = URL.createObjectURL(blob);
+                    fileInput.value = url;
+                    scanPreviewElement.innerHTML = '<object data="' + url + '" type="application/pdf" width="600" height="400"></object>';
+                })
+                .catch(error => {
+                    scanPreviewElement.textContent = "Can't Connect to TowWolf Scanner";
+                    console.log(`Error: ${error.message}`);
+                });
 
                 scanUpload = document.getElementById("scanUpload_" + type);
                 scanUpload.style.display = "flex";
