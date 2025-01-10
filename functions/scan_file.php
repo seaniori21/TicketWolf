@@ -17,7 +17,7 @@
         }
 
         // If successful, display the file name
-        echo $outputFile;
+        echo json_encode(["filename" => $outputFile, "command" => $command]);
 
     } catch (Exception $e) {
         // Catch and display the error message

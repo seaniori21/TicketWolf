@@ -523,14 +523,18 @@ include '../includes/header.php';
                     if (xhr.status === 200) {
                         // Hide loading message
                         scanLoadingElement.style.display = 'none';
+                        var response = JSON.parse(xhr.responseText);
 
 
-                        var filePath = xhr.responseText;
+                        var filePath = response.filename;
+                        console.log("RESPONSE TEXT FROM SCAN_FILE:" + response);
                         scanPreviewElement.innerHTML = '<object data="' + filePath + '" type="application/pdf" width="600" height="400"></object>';
                         fileInput.value = filePath; 
 
             
                         console.log("PDF file preview is working. File path: " + filePath);
+                    }else{
+                        console.log("ERROR:"+ xhr.status +  " - " + xhr.statusText);
                     }
                 };
                 // Send the request
