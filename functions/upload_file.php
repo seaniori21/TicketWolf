@@ -11,7 +11,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if(!isset($_FILES['file'])){
         echo json_encode(['status' => 'error', 'message' => 'wrong file format']);
-    }else if ($form_id && $file_group) {
+    }else 
+    if ($form_id && $file_group) {
         $file_name = $_FILES['file']['name'];
         $file_type = $_FILES['file']['type'];
         $file_tmp = $_FILES['file']['tmp_name'];

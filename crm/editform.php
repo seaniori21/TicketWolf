@@ -428,8 +428,9 @@ include '../includes/header.php';
                     <div>
                         <label for="file_<?php echo $type; ?>">Upload a <?php echo ucfirst($type); ?> File:</label>
                         <input type="file" name="file" id="file_<?php echo $type; ?>" required>
-                        <button type="button" class="goBackFile" data-type="<?php echo $type; ?>">Go Back</button>
                         <button type="submit">Upload</button>
+                        <button type="button" class="goBackFile" data-type="<?php echo $type; ?>">Go Back</button>
+                        
                     </div>
                 </form>
 
@@ -451,13 +452,15 @@ include '../includes/header.php';
                         <label for="file_<?php echo $type; ?>"></label>
                         <input type="hidden" name="file" id="file_<?php echo $type; ?>" required>
 
-                        <button type="button" id="scanButton_<?php echo $type; ?>">Scan</button>
                         <p id="scanLoading" style="display:none;">Scanning in progress...</p>
                         <div id="scanPreview"></div>
 
-
-                        <button type="scanUpload">Upload</button>
-                        <button type="button" class="goBackScan" data-type="<?php echo $type; ?>">Go Back</button>
+                        <div class="row-flex">
+                            <button type="button" id="scanButton_<?php echo $type; ?>">Scan</button>
+                            
+                            <button type="button" style="display:none;" id="scanUpload_<?php echo $type; ?>">Upload</button>
+                            <button type="button" class="goBackScan" data-type="<?php echo $type; ?>">Go Back</button>
+                        </div>
                     </div>
                 </form>
 
@@ -507,6 +510,7 @@ include '../includes/header.php';
 
                 const scanLoadingElement = container.querySelector('#scanLoading');
                 const scanPreviewElement = container.querySelector('#scanPreview');
+                const fileInput = container.querySelector("input[name='file']");
 
                 scanLoadingElement.style.display = 'flex';
                 scanButton.style.display = 'none';
@@ -523,7 +527,7 @@ include '../includes/header.php';
 
                         var filePath = xhr.responseText;
                         scanPreviewElement.innerHTML = '<object data="' + filePath + '" type="application/pdf" width="600" height="400"></object>';
-                        document.getElementById('file_' + type).value = filePath; 
+                        fileInput.value = filePath; 
 
             
                         console.log("PDF file preview is working. File path: " + filePath);
@@ -535,17 +539,80 @@ include '../includes/header.php';
                 
 
 
-                // scanUpload = container.querySelector('#scanUpload');
-                // scanUpload.addEventListener("click", function() {
-                //     const fileGroupInput = container.querySelector("input[name='file_group']");
-                //     const formIdInput = container.querySelector("input[name='form_id']");
-                //     const fileInput = container.querySelector("input[name='file']");
-                // });
+                scanUpload = document.getElementById("scanUpload_" + type);
+                scanUpload.style.display = "flex";
 
+
+                scanUpload.addEventListener("click", function() {
+                    event.preventDefault(); //TODO
+                    const fileGroupInput = container.querySelector("input[name='file_group']");
+                    const formIdInput = container.querySelector("input[name='form_id']");
+                    const pdfFilePath = fileInput.value;
+                    
+                    
+
+                    if (pdfFilePath) {
+                        fetch(pdfFilePath)
+                        .then(response => response.blob())
+                        .then(blob => {
+                            const reader = new FileReader();
+                            reader.onloadend = function() {
+                                const base64data = reader.result;
+                                const byteString = atob(base64data.split(',')[1]); // Decode Base64 string
+                                const arrayBuffer = new ArrayBuffer(byteString.length);
+                                const uint8Array = new Uint8Array(arrayBuffer);
+
+                                for (let i = 0; i < byteString.length; i++) {
+                                    uint8Array[i] = byteString.charCodeAt(i);
+                                }
+
+                                // Create a new Blob from the file data
+                                const pdfBlob = new Blob([uint8Array], { type: "application/pdf" });
+
+                                const formData = new FormData();
+
+                                // Append fields to respective form
+                                formData.append("file", blob, "scanned_file.pdf");
+                                formData.append("form_id", formIdInput.value);
+                                formData.append("file_group", fileGroupInput.value);
+
+                                formData.append("file", pdfBlob, "scanned_file.pdf");
+
+                                console.log("REACHED THE END",formData);
+
+                                //Now send the FormData to the server using fetch
+                                fetch("../functions/upload_file.php", {
+                                    method: "POST",
+                                    body: formData
+                                })
+                                .then(response => response.json()) 
+                                .then(data => {
+                                    if (data.status === "success") {
+                                        window.location.href = "editform.php?form_id=" + data.form_id; // TODO
+                                    } else {
+                                        alert("Upload failed: " + data.message);
+                                    }
+                                })
+                                .catch(error => {
+                                    alert("Error uploading file: " + error);
+                                });
+                            };
+                            reader.readAsDataURL(blob);
+                        })
+                        .catch(error => {
+                            console.error('Error loading the file:', error);
+                        });                      
+
+                    } else {
+                        alert("No image to upload!");
+                    }
+
+
+                });
             });
         });
     });
-
+    
     
     document.querySelectorAll(".goBackCam").forEach(button => {
         button.addEventListener("click",  function() {
@@ -555,6 +622,8 @@ include '../includes/header.php';
             showCameraButton.style.display = 'inline-flex';
             const showFileSectionButton = document.querySelector(`.showFileSectionButton[data-type="${type}"]`);
             showFileSectionButton.style.display = 'inline-flex';
+            const showScanSectionButton = document.querySelector(`.showScanSectionButton[data-type="${type}"]`);
+            showScanSectionButton.style.display = 'inline-flex';
 
             const cameraSection = document.getElementById("cameraSection_" + type);
             cameraSection.style.display = 'none'; 
@@ -568,9 +637,26 @@ include '../includes/header.php';
             showCameraButton.style.display = 'inline-flex';
             const showFileSectionButton = document.querySelector(`.showFileSectionButton[data-type="${type}"]`);
             showFileSectionButton.style.display = 'inline-flex';
+            const showScanSectionButton = document.querySelector(`.showScanSectionButton[data-type="${type}"]`);
+            showScanSectionButton.style.display = 'inline-flex';
 
             const uploadFileSection = document.getElementById("uploadFileSection_" + type);
             uploadFileSection.style.display = 'none'; 
+        });
+    });
+    document.querySelectorAll(".goBackScan").forEach(button => {
+        button.addEventListener("click",  function() {
+            const type = this.getAttribute("data-type");
+
+            const showCameraButton = document.querySelector(`.showCameraButton[data-type="${type}"]`);
+            showCameraButton.style.display = 'inline-flex';
+            const showFileSectionButton = document.querySelector(`.showFileSectionButton[data-type="${type}"]`);
+            showFileSectionButton.style.display = 'inline-flex';
+            const showScanSectionButton = document.querySelector(`.showScanSectionButton[data-type="${type}"]`);
+            showScanSectionButton.style.display = 'inline-flex';
+
+            const uploadScanSection_ = document.getElementById("uploadScanSection_" + type);
+            uploadScanSection_.style.display = 'none'; 
         });
     });
 
@@ -582,6 +668,8 @@ include '../includes/header.php';
             submitPhotoButton.style.display = 'none';
             const showFileSectionButton = document.querySelector(`.showFileSectionButton[data-type="${type}"]`);
             showFileSectionButton.style.display = 'none';
+            const showScanSectionButton = document.querySelector(`.showScanSectionButton[data-type="${type}"]`);
+            showScanSectionButton.style.display = 'none';
 
 
             const fileSection = document.getElementById("uploadFileSection_" + type);
@@ -606,12 +694,11 @@ include '../includes/header.php';
             fileInput.value = '';
             const video = document.getElementById("video_" + type);
             
-            console.log("Retake Button Clicked");
             //Display Camera Section
             const showCameraButton = document.querySelector(`.showCameraButton[data-type="${type}"]`);
             if (showCameraButton) {
-                console.log("Cam Button Clicked");
-                showCameraButton.click(); // Programmatically click the showCameraButton
+                
+                showCameraButton.click(); 
             }
             
         });
@@ -622,7 +709,7 @@ include '../includes/header.php';
         button.addEventListener("click", function() {
             const type = this.getAttribute("data-type");
 
-            console.log("Show CAm Running");
+        
             const cameraSection = document.getElementById("cameraSection_" + type);
             const video = document.getElementById("video_" + type);
             const captureButton = document.getElementById("capture_" + type);
@@ -637,6 +724,8 @@ include '../includes/header.php';
             this.style.display = "none";
             const showFileSectionButton = document.querySelector(`.showFileSectionButton[data-type="${type}"]`);
             showFileSectionButton.style.display = 'none';
+            const showScanSectionButton = document.querySelector(`.showScanSectionButton[data-type="${type}"]`);
+            showScanSectionButton.style.display = 'none';
 
             // Start the camera stream
             navigator.mediaDevices.getUserMedia({ video: true })
@@ -650,7 +739,6 @@ include '../includes/header.php';
             // Capture the photo when the capture button is clicked
             captureButton.addEventListener("click", function() {
             
-                // Set canvas dimensions to match video resolution
                 canvas.width = video.videoWidth;
                 canvas.height = video.videoHeight;
                 
@@ -710,7 +798,7 @@ include '../includes/header.php';
                 formData.append("file", blob, "captured_image.png");
                 formData.append("form_id", formIdInput.value);
                 formData.append("file_group", fileGroupInput.value);
-                console.log(fileGroupInput.value);
+                
 
                 // Now send the FormData to the server using fetch
                 fetch("../functions/upload_file.php", {
